@@ -1,0 +1,19 @@
+<resources>
+    <!--string name="app_name">Ent2</string-->
+    <string name="app_name">EntRoPhY<!--My Application 7--></string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="senal">Señalar pulsados</string>
+    <string name="senalar">Señalar pulsados</string>
+    <string name="velocidad">Velocidad:\t  </string>
+
+    <string name="alphabetTypesName">Type of Alphabets </string>
+
+    <string-array name="alphabetTypes">
+        <item>Dynamic</item>
+        <item>Static</item>
+        <item>World Alphabets</item>
+        <item>Mixed</item>
+    </string-array>
+
+</resources>
