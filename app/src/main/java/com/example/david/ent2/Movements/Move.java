@@ -22,7 +22,7 @@ public abstract class Move {
     public static final int VERTICAL_BLOCK_BOUNCE_MOVE = 2;
     public static final int LINE_MOVE = 3;
     public static final int MATRIX_MOVE = 4;
-    public static final int EXTRANGE_MOVE_1 = 5;
+    //public static final int EXTRANGE_MOVE_1 = 5;
     public static final int VERTICAL_BOUNCE_MOVE = 6;
     public static final int LINE_BOUNCE_MOVE = 7;
     public static final int INFINITE_BLOCK_MOVE = 8;
@@ -30,10 +30,8 @@ public abstract class Move {
     public static final int LASER_MOVE = 10;
     public static final int SNAKE_MOVE = 11;
 
-
-    //float xInicial, yInicial;
-    Character cr;
-    float x, y;
+    protected Character cr;
+    protected float x, y;
 
 
     /**Constructor estático, devuelve una nueva instancia del tipo de movimiento requerido
@@ -73,15 +71,9 @@ public abstract class Move {
         initPosition();
     }
 
-    public Move(){
-//        initPosition();
-    }
-
     private void initPosition() {
         x = cr.getX();
         y = cr.getY();
-//        xInicial = x;
-//        yInicial = y;
 
         concreteInitialization();
     }
@@ -89,10 +81,10 @@ public abstract class Move {
     public void update(){
         cr.setX(x);
         cr.setY(y);
-    };
+    }
 
     public String getInfo(){
         return "\nTamaño de pantalla x,y : "+
                 X_MAX_SCREEN_SIZE +","+ Y_MAX_SCREEN_SIZE;
-    };
+    }
 }

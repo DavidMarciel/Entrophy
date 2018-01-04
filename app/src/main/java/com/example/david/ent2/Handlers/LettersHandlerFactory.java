@@ -13,15 +13,13 @@ import java.util.Collections;
 /**
  * Created by david on 22/07/2014.
  */
-public class LettersHandlerFactory {             //Factory Method Patron
+public class LettersHandlerFactory {
 
+    private RelativeLayout relativeLayout;
+    private Context context;
 
-    RelativeLayout relativeLayout;
-    Context context;
-
-    AlphabetsFactory alphabetsFactory;
-
-    Handler[] handlers;
+    private AlphabetsFactory alphabetsFactory;
+    private Handler[] handlers;
 
 
 

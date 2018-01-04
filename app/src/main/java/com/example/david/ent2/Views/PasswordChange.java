@@ -38,16 +38,16 @@ import java.util.Calendar;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class PasswordChange extends Activity {
 
-    private static final int TIPOS_DE_LETRA = 1;
-    private static final int NUMERO_DE_LETRAS = 5;
+    private static final int NUMBER_OF_PASSWORD_LETTERS = 5;
 
+    private boolean activeBackground;
     private RelativeLayout relativeLayout;
     private Character[] letters;
     private Handler[] handlers;
     private Counter counter;
-    private TextView[] tv;
-    private Button[] b = new Button[TIPOS_DE_LETRA];
-    CheckBox moveLettersInPasswordChange;
+    private TextView[] selectedLetters;
+    private Button newLetterButton;
+    private CheckBox moveLettersInPasswordChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +56,13 @@ public class PasswordChange extends Activity {
         setContentView(R.layout.password);
 
         activeBackground = false;
-        relativeLayout = (RelativeLayout) findViewById(R.id.lLayoutCambiaContrasena);
-        tv = new TextView[NUMERO_DE_LETRAS];
+        relativeLayout = findViewById(R.id.lLayoutCambiaContrasena);
+        selectedLetters = new TextView[NUMBER_OF_PASSWORD_LETTERS];
 
         showTime(2);
-        b = new Button[TIPOS_DE_LETRA];
-        b[0] = (Button) findViewById(R.id.LLatinas);
-//        ySpeed[1] = (Button) findViewById(R.id.LRusas);
-//        ySpeed[2] = (Button) findViewById(R.id.LChinas);
-//        ySpeed[2].setTextColor(Color.GRAY);              //esta desactivado
-//        ySpeed[3] = (Button) findViewById(R.id.LArabes);
-//        ySpeed[4] = (Button) findViewById(R.id.LDevanagari);
-//        ySpeed[5] = (Button) findViewById(R.id.LHebreas);
+        newLetterButton =  findViewById(R.id.LLatinas);
 
-        moveLettersInPasswordChange = (CheckBox) findViewById(R.id.moverEnContraseña);
+        moveLettersInPasswordChange = findViewById(R.id.moverEnContraseña);
         updateSignal(getApplicationContext());
 
         letters = new Character[0];
@@ -77,7 +70,7 @@ public class PasswordChange extends Activity {
         showTime(3);
         counter = DataStorage.getPassword(getApplicationContext());
         updateTextViews(counter);
-        counter = new Counter(NUMERO_DE_LETRAS);
+        counter = new Counter(NUMBER_OF_PASSWORD_LETTERS);
         showTime(4);
 
         if(counter.size() == 0){
@@ -86,7 +79,7 @@ public class PasswordChange extends Activity {
 
     }
 
-    AsyncLoop asyncLoop;
+    private AsyncLoop asyncLoop;
 
     public void tapHandler(View v) {
 
@@ -95,7 +88,7 @@ public class PasswordChange extends Activity {
         AlphabetsFactory alphabetsFactory = new AlphabetsFactory(getApplicationContext(), relativeLayout);
 
         switch (alphabetsType){
-            case "Dynamic": letters = alphabetsFactory.getLetters(); break;
+            case "Dynamic": letters = alphabetsFactory.getLatinLetters(); break;
             case "Static": letters = alphabetsFactory.getStaticLetters(); break;
             case "World Alphabets": letters = alphabetsFactory.getWorldLetters(); break;
             case "Mixed": letters = alphabetsFactory.getMixedLetters(); break;
@@ -119,7 +112,6 @@ public class PasswordChange extends Activity {
         disablebuttons();
     }
 
-    private boolean activeBackground;
 
 
     @Override
@@ -143,9 +135,7 @@ public class PasswordChange extends Activity {
 
             if (!validTap()) return true;
 
-            Character c = null;
-
-            c = showSelectedLetters(event);
+            Character c = showSelectedLetters(event);
 
             if (c == null) {
                 return true;
@@ -171,7 +161,6 @@ public class PasswordChange extends Activity {
         for (int i = 0; i < counter.size(); i++) {
             generateSelectedLabels(counter.get(i), i);
         }
-
     }
 
 
@@ -183,24 +172,10 @@ public class PasswordChange extends Activity {
         if (letters != null) {
 
             //recoge las posibles
-            for (int i = 0; i < letters.length; i++) {
+            selected.addAll( gatherCloseLetters(event));
 
-                if (letters[i].inRange(event)) {
-                    selected.add(letters[i]);
-                    //s += letters[i].getValue();
-                }
-            }
             //recoge las posibles en handlers
-            if(handlers != null) {
-                for (int i = 0; i < handlers.length; i++) {
-
-                    if (handlers[i] != null) {
-                        ArrayList<Character> ac = handlers[i].tap(event);
-                        selected.addAll(ac);
-                        handlers[i] = null;
-                    }
-                }
-            }
+            selected.addAll( gatherCloseLettersInHandlers(event));
 
             if(selected.size()<1) return null;
 
@@ -216,11 +191,40 @@ public class PasswordChange extends Activity {
             // si hay varias seleccionadas se expanden
             else if (selected.size() > 1) {
                 Log.d("numero de letters", letters.length + "");
-//                stopLoop();
-                recoloca(letters);
+                recolocateLetters(letters);
             }
         }
         return null;
+    }
+
+    private ArrayList<Character> gatherCloseLettersInHandlers(MotionEvent event) {
+
+        ArrayList<Character> closeLetters = new ArrayList<>();
+
+        if(handlers != null) {
+            for (int i = 0; i < handlers.length; i++) {
+
+                if (handlers[i] != null) {
+                    ArrayList<Character> ac = handlers[i].tap(event);
+                    closeLetters.addAll(ac);
+                    handlers[i] = null;
+                }
+            }
+        }
+        return closeLetters;
+    }
+
+    private ArrayList<Character> gatherCloseLetters(MotionEvent event) {
+
+        ArrayList<Character> closeLetters = new ArrayList<>();
+
+        for (Character letter : letters) {
+
+            if (letter.inRange(event)) {
+                closeLetters.add(letter);
+            }
+        }
+        return closeLetters;
     }
 
     private void stopLoop() {
@@ -229,70 +233,58 @@ public class PasswordChange extends Activity {
         }
     }
 
-    private void recoloca(Character[] selected) {
+    private void recolocateLetters(Character[] selected) {
 
         Log.d("numero de letras2", selected.length + "");
 
-        Dimens medida = Dimens.getMedidas();
-        double distance = medida.MAXIMUM_RANGE_DISTANCE /2-1;
-        double xMax = medida.X_MAX_SCREEN_SIZE;
-        double xMin = medida.X_MIN_SCREEN_SIZE + 150f;
-        double yMax = medida.Y_MAX_SCREEN_SIZE;
-        double yMin = medida.Y_MIN_SCREEN_SIZE + 150f;
+        //double distance = Dimens.MAXIMUM_RANGE_DISTANCE /2-1;
+        double xMax = Dimens.X_MAX_SCREEN_SIZE;
+        double xMin = Dimens.X_MIN_SCREEN_SIZE + 150f;
+        //double yMax = Dimens.Y_MAX_SCREEN_SIZE;
+        double yMin = Dimens.Y_MIN_SCREEN_SIZE + 150f;
         double margen = 100;
 
-
-        Character c;
-
-
         float usefulLength = (float) (xMax - xMin);
-        int LETTERS_PER_ROW = (int) (usefulLength/ (margen+6d));
+        int lettersPerRow = (int) (usefulLength/ (margen+6d));
         int x = -1;
         int y = -1;
 
-        for (int i = 0; i < selected.length; i++) {
+        for (Character aSelected : selected) {
 
-            if (x < LETTERS_PER_ROW) x++;
+            if (x < lettersPerRow) x++;
             else x = 0;
-            if(x == 0) y++;
+            if (x == 0) y++;
 
-            c = selected[i];
+            aSelected.setX((float) ((x * margen) % usefulLength) + (float) xMin);
+            aSelected.setY((float) (y * margen + yMin));
 
-            c.setX((float) ((x * margen) % usefulLength) + (float) xMin);
-            c.setY((float) (y * margen + yMin));
-
-            Log.d("Letra en posicion: ", c.getValue()+ " "+ c.getX()+ " "+ c.getY());
-
-            c.show(relativeLayout);
-
+            Log.d("Letra en posicion: ", aSelected.getValue() + " " + aSelected.getX() + " " + aSelected.getY());
+            aSelected.showIn(relativeLayout);
         }
-
     }
 
     private void generateSelectedLabels(Character c, int x) {
-        tv[x] = new TextView(getApplicationContext());
-        tv[x].setX(200 + (x * 60));
-        tv[x].setY(650);
-        tv[x].setText(c.getValue() + "");
-        tv[x].setTextSize(25f);
-        tv[x].setTextColor(c.getColor());
-        tv[x].setTypeface(TypeFaces.getTipeFace(getApplicationContext(), c.getLetterType()), Typeface.BOLD);
-        relativeLayout.addView(tv[x]);
+        selectedLetters[x] = new TextView(getApplicationContext());
+        selectedLetters[x].setX(200 + (x * 60));
+        selectedLetters[x].setY(650);
+        selectedLetters[x].setText(c.getValue() + "");
+        selectedLetters[x].setTextSize(25f);
+        selectedLetters[x].setTextColor(c.getColor());
+        selectedLetters[x].setTypeface(TypeFaces.getTipeFace(getApplicationContext(), c.getLetterType()), Typeface.BOLD);
+        relativeLayout.addView(selectedLetters[x]);
     }
 
     private void hideCounter() {
 
-        for (int i = 0; i < NUMERO_DE_LETRAS; i++) {
-            relativeLayout.removeView(tv[i]);
+        for (int i = 0; i < NUMBER_OF_PASSWORD_LETTERS; i++) {
+            relativeLayout.removeView(selectedLetters[i]);
         }
-
     }
 
     private void disablebuttons() {
 
-        for (int i = 0; i < TIPOS_DE_LETRA; i++) {
-            relativeLayout.removeView(b[i]);
-        }
+        relativeLayout.removeView(newLetterButton);
+
         hideCounter();
         enableBackgroundTaps(true);
     }
@@ -304,13 +296,10 @@ public class PasswordChange extends Activity {
 
     private void enableButtons() {
 
-        for (int i = 0; i < TIPOS_DE_LETRA; i++) {
-            relativeLayout.addView(b[i]);
-        }
+        relativeLayout.addView(newLetterButton);
         enableBackgroundTaps(false);
 
         relativeLayout.addView(moveLettersInPasswordChange);
-
     }
 
     private void cleanElements() {
@@ -328,17 +317,17 @@ public class PasswordChange extends Activity {
         updateOrientationPortraitLandscape(newConfig);
     }
 
-    private void updateOrientationPortraitLandscape(Configuration newConfig) {
+    private void updateOrientationPortraitLandscape(Configuration configuration) {
 
         boolean isOrientacionVertical;// = Character.ORIENTACION_VERTICAL;
 
-        if (newConfig.orientation == newConfig.ORIENTATION_PORTRAIT) {            //esta de pie
+        if(configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {            //esta de pie
             isOrientacionVertical = true;
         } else {                                                                   //esta tumbado
             isOrientacionVertical = false;
         }
 
-        Character.setIsOrientationVertical(isOrientacionVertical);
+        Character.setIsOrientationVertical(isOrientacionVertical, getApplicationContext());
         updateCharacteres();
         updateHandlers();
     }
@@ -348,15 +337,15 @@ public class PasswordChange extends Activity {
      */
     private void updateCharacteres() {
         if (letters != null) {
-            for (int i = 0; i < letters.length; i++) {
-                letters[i].update();
+            for (Character letter : letters) {
+                letter.update();
             }
         }
     }
 
     private void updateHandlers() {
-        for (int i = 0; i < handlers.length; i++) {
-            handlers[i].update();
+        for (Handler handler : handlers) {
+            handler.update();
         }
     }
 
@@ -368,7 +357,7 @@ public class PasswordChange extends Activity {
     private void showTime(int llamada) {
         DateFormat df = new SimpleDateFormat("HH:mm:ss.SSSZ");
         String date = df.format(Calendar.getInstance().getTime());
-        Log.v("tiempo", "tiempo en setContrasena: " + date.toString() + " llamada " + llamada + "\n");
+        Log.v("tiempo", "tiempo en setContrasena: " + date + " llamada " + llamada + "\n");
     }
 
 
@@ -393,8 +382,6 @@ public class PasswordChange extends Activity {
     }
 
     public void notifyMove(View view){
-
-//        CheckBox moveLettersInPasswordChange = (CheckBox) findViewById(R.id.moverEnContraseña);
 
         if(moveLettersInPasswordChange.isChecked()){
             DataStorage.signalMovePassword(getApplicationContext());

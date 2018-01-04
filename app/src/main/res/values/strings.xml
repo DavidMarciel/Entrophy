@@ -8,6 +8,10 @@
     <string name="velocidad">Velocidad:\t  </string>
 
     <string name="alphabetTypesName">Type of Alphabets </string>
+    <string name="DenyAccess">Acceso  denegado.  (%1$.2f s)</string>
+    <string name="GrantAccess">Acceso  concedido.  (%1$.2f s)</string>
+    <string name="rightPassword">Contraseña correcta (%1$.2f s)</string>
+    <string name="wrongPassword">Contraseña incorrecta (%1$.2f s)</string>
 
     <string-array name="alphabetTypes">
         <item>Dynamic</item>

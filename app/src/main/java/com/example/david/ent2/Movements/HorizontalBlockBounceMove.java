@@ -7,8 +7,7 @@ public class HorizontalBlockBounceMove extends Move {
 
     static boolean startToTheRight = true;
 
-    static final float SPEED = 5 /3.5f; //inicialmente 5
-    private float X_INICIAL;
+    private static final float SPEED = 5 /3.5f;
 
     public HorizontalBlockBounceMove() {
         super();
@@ -21,14 +20,14 @@ public class HorizontalBlockBounceMove extends Move {
 
     @Override
     protected void concreteInitialization() {
-        X_INICIAL = cr.getX();
+
     }
 
     @Override
     public void move() {
 
-        if( x < X_MIN_SCREEN_SIZE /*+ X_INICIAL - 700*/  /*-800*/ ) startToTheRight = true;
-        else if(X_MAX_SCREEN_SIZE /*+ X_INICIAL - 875  */ /*-800*/ < x) startToTheRight = false;
+        if( x < X_MIN_SCREEN_SIZE ) startToTheRight = true;
+        else if(X_MAX_SCREEN_SIZE < x) startToTheRight = false;
 
         if(startToTheRight){
             x += SPEED;

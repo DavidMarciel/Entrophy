@@ -10,27 +10,27 @@ public class TypeFaces {
 
     private static boolean initializated = false;
 
-    static final int DEFAULT = 0;
-    static final int COMICATE           = 1;
-    static final int JANVIER            = 2;
-    static final int LE_FUTUR_ATENDRA   = 3;
-    static final int O4B_20             = 4;
-    static final int O4B_03             = 5;
-    static final int JANVIER_LIGHT      = 6;
-    static final int CALIGSTROY         = 7;
-    static final int GLORIA_HALLELUJAH  = 8;
-    static final int LES_JOURS_HEUREUX  = 9;
-    static final int PATAQUES           = 10;
-    static final int PATAQUES_BRUSH     = 11;
-    static final int QUAND_TU_DORS      = 12;
-    static final int ARMALITE           = 13;
-    static final int OLIVER             = 14;
-    static final int ATRACTWOMEN        = 15;
-    static final int BLKCHCRY           = 16;
-    static final int NEUROPOLITICAL     = 17;
-    static final int OCTIN_STENCIL_RG   = 18;
-    static final int RM_TYPERIGHTER     = 19;
-    static final int AEROLITE_BOLD      = 20;
+    public static final int DEFAULT            = 0;
+    public static final int COMICATE           = 1;
+    public static final int JANVIER            = 2;
+    public static final int LE_FUTUR_ATENDRA   = 3;
+    public static final int O4B_20             = 4;
+    public static final int O4B_03             = 5;
+    public static final int JANVIER_LIGHT      = 6;
+    public static final int CALIGSTROY         = 7;
+    public static final int GLORIA_HALLELUJAH  = 8;
+    public static final int LES_JOURS_HEUREUX  = 9;
+    public static final int PATAQUES           = 10;
+    public static final int PATAQUES_BRUSH     = 11;
+    public static final int QUAND_TU_DORS      = 12;
+    public static final int ARMALITE           = 13;
+    public static final int OLIVER             = 14;
+    public static final int ATRACTWOMEN        = 15;
+    public static final int BLKCHCRY           = 16;
+    public static final int NEUROPOLITICAL     = 17;
+    public static final int OCTIN_STENCIL_RG   = 18;
+    public static final int RM_TYPERIGHTER     = 19;
+    public static final int AEROLITE_BOLD      = 20;
 
     private static Typeface byDefault;
     private static Typeface comicate;
@@ -85,38 +85,38 @@ public class TypeFaces {
 
     }
 
-    public static Typeface getTipeFace(Context c, int letterTypeAsInt) {
+    public static Typeface getTipeFace(Context context, int letterTypeAsInt) {
 
-        if(!initializated) initTypefaces(c);
+        if(!initializated) initTypefaces(context);
 
-        Typeface tf = null;
+        Typeface typeface;
 
         switch (letterTypeAsInt){
-            case DEFAULT:               tf = byDefault;             break;
-            case COMICATE:              tf = comicate;              break;
-            case JANVIER:               tf = janvier;               break;
-            case LE_FUTUR_ATENDRA:      tf = letraLeFuturAtendra;   break;
-            case O4B_20:                tf = o4b_20;                break;
-            case O4B_03:                tf = o4b_03;                break;
-            case JANVIER_LIGHT:         tf = janvierLight;          break;
-            case CALIGSTROY:            tf = caligstroy;            break;
-            case GLORIA_HALLELUJAH:     tf = gloriaHallelujah;      break;
-            case LES_JOURS_HEUREUX:     tf = lesJousHereux;         break;
-            case PATAQUES:              tf = pataques;              break;
-            case PATAQUES_BRUSH:        tf = pataquesBrush;         break;
-            case QUAND_TU_DORS:         tf = quandTuDors;           break;
-            case ARMALITE:              tf = armalite;              break;
-            case OLIVER:                tf = oliver;                break;
-            case ATRACTWOMEN:           tf = atractWomen;           break;
-            case BLKCHCRY:              tf = blkChCry;              break;
-            case NEUROPOLITICAL:        tf = neuroPolitical;        break;
-            case OCTIN_STENCIL_RG:      tf = octinStencilRg;        break;
-            case RM_TYPERIGHTER:        tf = rmTypeRighter;         break;
-            case AEROLITE_BOLD:         tf = aeroliteBold;           break;
+            case DEFAULT:               typeface = byDefault;             break;
+            case COMICATE:              typeface = comicate;              break;
+            case JANVIER:               typeface = janvier;               break;
+            case LE_FUTUR_ATENDRA:      typeface = letraLeFuturAtendra;   break;
+            case O4B_20:                typeface = o4b_20;                break;
+            case O4B_03:                typeface = o4b_03;                break;
+            case JANVIER_LIGHT:         typeface = janvierLight;          break;
+            case CALIGSTROY:            typeface = caligstroy;            break;
+            case GLORIA_HALLELUJAH:     typeface = gloriaHallelujah;      break;
+            case LES_JOURS_HEUREUX:     typeface = lesJousHereux;         break;
+            case PATAQUES:              typeface = pataques;              break;
+            case PATAQUES_BRUSH:        typeface = pataquesBrush;         break;
+            case QUAND_TU_DORS:         typeface = quandTuDors;           break;
+            case ARMALITE:              typeface = armalite;              break;
+            case OLIVER:                typeface = oliver;                break;
+            case ATRACTWOMEN:           typeface = atractWomen;           break;
+            case BLKCHCRY:              typeface = blkChCry;              break;
+            case NEUROPOLITICAL:        typeface = neuroPolitical;        break;
+            case OCTIN_STENCIL_RG:      typeface = octinStencilRg;        break;
+            case RM_TYPERIGHTER:        typeface = rmTypeRighter;         break;
+            case AEROLITE_BOLD:         typeface = aeroliteBold;          break;
 
-            default:                    tf = null;                  break;
+            default:                    typeface = null;                  break;
         }
-        return tf;
+        return typeface;
     }
 
 }

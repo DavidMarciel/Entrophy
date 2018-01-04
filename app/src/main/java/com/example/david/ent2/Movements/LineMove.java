@@ -12,7 +12,7 @@ public class LineMove extends Move {
     private float ySpeed;
     private float xSpeed;
 
-    final float VELOCIDAD_MAXIMA = 6 /3.5f; //inicialmente 6
+    private final float VELOCIDAD_MAXIMA = 6 /3.5f; //inicialmente 6
 
     @Override
     public int getMovementType() {
@@ -41,7 +41,6 @@ public class LineMove extends Move {
         horizontalMove();
         verticalMove();
     }
-
 
     @Override
     public String getInfo() {

@@ -29,8 +29,8 @@ public class InfiniteBlockHandler extends Handler {
 
     @Override
     public void move() {
-        for (int i = 0; i < letters.length ; i++) {
-            letters[i].move();
+        for (Character letter : letters) {
+            letter.move();
         }
     }
 

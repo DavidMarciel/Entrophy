@@ -50,7 +50,5 @@ public class VerticalBounceMove extends Move {
         else if(Y_MAX_SCREEN_SIZE < y) goingBottom = false;
 
         cr.setY(y);
-
     }
-
 }

@@ -53,11 +53,11 @@ public abstract class Handler {
 
     public void tap(MotionEvent event, int tabNumber, ArrayList<Character>[] hittedCharacteres){
 
-        for (int i = 0; i < letters.length; i++) {
+        for (Character letter : letters) {
 
-            if (letters[i].inRange(event)) {
+            if (letter.inRange(event)) {
 
-                hittedCharacteres[tabNumber].add(letters[i]);
+                hittedCharacteres[tabNumber].add(letter);
 
             }
         }
@@ -67,11 +67,11 @@ public abstract class Handler {
 
         ArrayList<Character> selected = new ArrayList<>();
 
-        for (int i = 0; i < letters.length; i++) {
+        for (Character letter : letters) {
 
-            if (letters[i].inRange(event)) {
+            if (letter.inRange(event)) {
 
-                selected.add(letters[i]);
+                selected.add(letter);
 
             }
         }
@@ -80,14 +80,14 @@ public abstract class Handler {
 
     public void tapAndSignal(MotionEvent event, int numPulsacion, ArrayList<Character>[] hittedCharacters) {
 
-        for (int i = 0; i < letters.length; i++) {
+        for (Character letter : letters) {
 
-            if (letters[i].inRange(event)) {
-                letters[i].selected();
+            if (letter.inRange(event)) {
+                letter.selected();
 
-                hittedCharacters[numPulsacion].add(letters[i]);
+                hittedCharacters[numPulsacion].add(letter);
 
-            } else letters[i].notSelected();
+            } else letter.notSelected();
         }
     }
 
@@ -138,13 +138,13 @@ public abstract class Handler {
             float x2 = letters[i+1].getX();
             float y2 = letters[i+1].getY();
 
-            float xDif = x2-x1;
-            float yDif = y2-y1;
+            float xDistance = x2-x1;
+            float yDistance = y2-y1;
 
             //crea tantos points entre letters (incluye los de las propias letters) como se pida
             for (int j = 0; j < STEPS; j++) {
 
-                points.add(new Point(x1+xDif*j/ STEPS, y1+yDif*j/ STEPS));
+                points.add(new Point(x1+ xDistance *j/ STEPS, y1+ yDistance *j/ STEPS));
 
             }
 
@@ -159,8 +159,8 @@ public abstract class Handler {
     }
 
     public void update() {
-        for (int i = 0; i < letters.length; i++) {
-            letters[i].update();
+        for (Character letter : letters) {
+            letter.update();
         }
     }
 }

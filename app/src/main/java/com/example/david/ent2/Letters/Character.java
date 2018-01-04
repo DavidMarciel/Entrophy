@@ -23,14 +23,13 @@ public class Character {
     static final boolean ORIENTATION_VERTICAL = true;      //portrait |        dimension Y
     private static boolean isOrientationVertical = ORIENTATION_VERTICAL;
 
-    //desvio
-    static private Dimens dimens = Dimens.getMedidas();
-    static private float PROPORTION = dimens.PROPORTION;
-    static private double MAXIMUM_RANGE_DISTANCE = dimens.MAXIMUM_RANGE_DISTANCE;
-    static private int VERTICAL_Y_DEVIATION = dimens.VERTICAL_Y_DEVIATION;
-    static private int VERTICAL_X_DEVIATION = dimens.VERTICAL_X_DEVIATION;
-    static private int HORIZONTAL_Y_DEVIATION = dimens.HORIZONTAL_Y_DEVIATION;
-    static private int HORIZONTAL_X_DEVIATION = dimens.HORIZONTAL_X_DEVIATION;
+    //deviation
+    static private float proportion = 0;
+    static private double MAXIMUM_RANGE_DISTANCE = Dimens.MAXIMUM_RANGE_DISTANCE;
+    static private int VERTICAL_Y_DEVIATION = Dimens.VERTICAL_Y_DEVIATION;
+    static private int VERTICAL_X_DEVIATION = Dimens.VERTICAL_X_DEVIATION;
+    static private int HORIZONTAL_Y_DEVIATION = Dimens.HORIZONTAL_Y_DEVIATION;
+    static private int HORIZONTAL_X_DEVIATION = Dimens.HORIZONTAL_X_DEVIATION;
     //static private double MAXIMUM_LOW_RANGE_DISTANCE = dimens.MAXIMUM_LOW_RANGE_DISTANCE;
 
     //movimiento
@@ -53,7 +52,7 @@ public class Character {
         this.value = value;
 //        this.letterType = letterType;
         textView = new TextView(context);
-        textView.setText(value + "");
+        textView.setText( String.valueOf( value));
         textView.setTextColor(color);
         textView.setTextSize(18 * (1f + porcentualIncrease));
         setX(x);
@@ -73,7 +72,7 @@ public class Character {
         this.color = color;
 
         textView = new TextView(context);
-        textView.setText(value + "");
+        textView.setText( String.valueOf( value));
         textView.setTextColor(color);
 
         setLetterType(context, letterType);
@@ -88,9 +87,8 @@ public class Character {
 
         Typeface letterType = TypeFaces.getTipeFace(context, letterTypeAsInt);
 
-        if(mov != null &&
-                mov.getMovementType() == Move.LINE_BOUNCE_MOVE) {   //los movimientos mas dificiles
-            textView.setTypeface(letterType, Typeface.BOLD);          //de encontrar se ven mejor
+        if(mov != null && mov.getMovementType() == Move.LINE_BOUNCE_MOVE) {     //los movimientos mas dificiles
+            textView.setTypeface(letterType, Typeface.BOLD);                    //de encontrar se ven mejor
         }
         else{
             textView.setTypeface(letterType);
@@ -100,38 +98,39 @@ public class Character {
 
     public float getX() {
         if (isOrientationVertical)
-            return textView.getX()/ PROPORTION;
+            return textView.getX()/ proportion;
         else
-            return textView.getY()/ PROPORTION;
+            return textView.getY()/ proportion;
     }
 
     public float getY() {
         if (isOrientationVertical)
-            return textView.getY()/ PROPORTION;
+            return textView.getY()/ proportion;
         else
-            return textView.getX()/ PROPORTION;
+            return textView.getX()/ proportion;
     }
 
     public void setX(float x) {
         if (isOrientationVertical)
-            textView.setX(x* PROPORTION);
+            textView.setX(x* proportion);
         else
-            textView.setY(x* PROPORTION);
+            textView.setY(x* proportion);
     }
 
     public void setY(float y) {
         if (isOrientationVertical)
-            textView.setY(y * PROPORTION);
+            textView.setY(y * proportion);
         else
-            textView.setX(y * PROPORTION);
+            textView.setX(y * proportion);
     }
 
-    public static boolean isIsOrientationVertical() {
+    public static boolean isOrientationVertical() {
         return isOrientationVertical;
     }
 
-    public static void setIsOrientationVertical(boolean isOrientationVertical) {
+    public static void setIsOrientationVertical(boolean isOrientationVertical, Context context) {
         Character.isOrientationVertical = isOrientationVertical;
+        proportion = Dimens.getProportion(context);
     }
 
     public void selected() {
@@ -177,19 +176,18 @@ public class Character {
         float yDifference;   //el - 120 es para calibrarlo
 
         if(isOrientationVertical) {
-            xDifference = event.getX() / PROPORTION - this.getX() - VERTICAL_X_DEVIATION;
-            yDifference = event.getY() / PROPORTION - this.getY() - VERTICAL_Y_DEVIATION;
+            xDifference = event.getX() / proportion - this.getX() - VERTICAL_X_DEVIATION;
+            yDifference = event.getY() / proportion - this.getY() - VERTICAL_Y_DEVIATION;
         }
         else{
-            xDifference = event.getX() / PROPORTION - this.getY() - HORIZONTAL_X_DEVIATION;
-            yDifference = event.getY() / PROPORTION - this.getX() - HORIZONTAL_Y_DEVIATION;
+            xDifference = event.getX() / proportion - this.getY() - HORIZONTAL_X_DEVIATION;
+            yDifference = event.getY() / proportion - this.getX() - HORIZONTAL_Y_DEVIATION;
         }
 
         double distance = xDifference * xDifference + yDifference * yDifference;
         distance = Math.sqrt(distance);
 
-        if (distance < MAXIMUM_RANGE_DISTANCE) return true;
-        else return false;
+        return distance < MAXIMUM_RANGE_DISTANCE;
     }
 
     public boolean equals(Character otro){
@@ -204,9 +202,9 @@ public class Character {
 
     public boolean containedBy(Character[] items){
 
-        for(int i = 0; i< items.length; i++) {
-            if (this.getValue() == items[i].getValue()
-                    && this.getColor() == items[i].getColor()) {
+        for (Character item : items) {
+            if (this.getValue() == item.getValue()
+                    && this.getColor() == item.getColor()) {
                 return true;
             }
         }
@@ -224,10 +222,10 @@ public class Character {
 
     /**Anade el caracter para ser mostrado en el RelativeLayout pasado como parámetro
      *
-     * @param rl RelativeLayout en el que se mostrará
+     * @param relativeLayout RelativeLayout en el que se mostrará
      */
-    public void show(RelativeLayout rl){
-        rl.addView(textView);
+    public void showIn(RelativeLayout relativeLayout){
+        relativeLayout.addView(textView);
     }
 
     public void setMove(int movementType) {

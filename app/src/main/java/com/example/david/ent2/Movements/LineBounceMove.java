@@ -12,7 +12,7 @@ public class LineBounceMove extends Move {
     private float xSpeed;
     private float ySpeed;
 
-    final float VELOCIDAD_MAXIMA = 3 /3.5f; //anteriormente 6 //comodo en 3
+    private final float VELOCIDAD_MAXIMA = 3 /3.5f;
 
     public LineBounceMove() {
         super();

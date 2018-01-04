@@ -32,7 +32,7 @@ public class SnakeHandler extends Handler {
         letters[letters.length-1].setMove(Move.SNAKE_MOVE);
     }
 
-    /**Mueve todas las letters, se mueven de forma que unas siguen xSpeed otras,
+    /**Mueve todas las letters, se mueven de forma que unas siguen los puntos de otras,
      * excepto la primera, que utiliza un movimiento
      *
      */
@@ -40,11 +40,12 @@ public class SnakeHandler extends Handler {
     public void move() {
         for (int i = 0; i < letters.length-1 ; i++) {
 
-            int goTo = (i*(STEPS +1)+1);
+            int nextPointToMove = (i*(STEPS +1)+1);
+            float nextPointX = points.get( nextPointToMove).getX();
+            float nextPointY = points.get( nextPointToMove).getY();
 
-            letters[i].setX(points.get(goTo).getX());
-            letters[i].setY(points.get(goTo).getY());
-
+            letters[i].setX( nextPointX );
+            letters[i].setY( nextPointY );
         }
         moveLastLetter(letters[letters.length-1]);
     }

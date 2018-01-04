@@ -15,12 +15,13 @@ import com.example.david.ent2.Handlers.Handler;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AsyncLoop extends AsyncTask<Object, Object, Object> {
 
+    private static final String DEVELOPMENT = "Desarrollo";
     private Character[] letters;
     private int time;
     private int lastTapTime;
     private int initialStop;
     private Handler[] handler;
-    int speed;
+    private int speed;
 
     public AsyncLoop(Character[] letters, Handler[] handler, Context context) {
         this.letters = letters;
@@ -39,7 +40,7 @@ public class AsyncLoop extends AsyncTask<Object, Object, Object> {
     @Override
     protected Object doInBackground(Object... params) {
 
-        Log.v("Desarrollo", "primera tap hecha");
+        Log.v(DEVELOPMENT, "primera tap hecha");
         if(initialStop != 0) {
             waiting(initialStop, "fallo en la waiting inicial");
         }
@@ -49,7 +50,6 @@ public class AsyncLoop extends AsyncTask<Object, Object, Object> {
 
             waiting(speed, "fallo en el bucleAsincrono");   //para letters sueltas
 
-            //bucle cancelado
             if (isCancelled()) {
                 break;
             }
@@ -67,25 +67,29 @@ public class AsyncLoop extends AsyncTask<Object, Object, Object> {
 
         if(!isCancelled()) {
 
-            //move las letters
-            if (letters != null) {
-                for (int i = 0; i < letters.length; i++) {
-                    letters[i].move();
-                }
-            }
+            move();
 
-            //move los manejadores
-            if (handler != null) {
-                for (int i = 0; i < handler.length; i++) {
-                    if (handler[i] != null)
-                        handler[i].move();
-                }
-            }
-
-//            Log.d("move", "move");
-
-            //update el time
+            // update time, this time is not the overall time, it is a tick counter,
+            // it adds one each time the loop executes
             time++;
+        }
+    }
+
+    private void move() {
+
+        //move letters
+        if (letters != null) {
+            for (Character letter : letters) {
+                letter.move();
+            }
+        }
+
+        //move handlers
+        if (handler != null) {
+            for (Handler aHandler : handler) {
+                if (aHandler != null)
+                    aHandler.move();
+            }
         }
     }
 
@@ -94,7 +98,7 @@ public class AsyncLoop extends AsyncTask<Object, Object, Object> {
             Thread.sleep(tiempoMilis);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.v("Fallo", mensaje);
+            Log.v(DEVELOPMENT, "Fallo " + mensaje);
         }
     }
 
@@ -103,17 +107,12 @@ public class AsyncLoop extends AsyncTask<Object, Object, Object> {
     }
 
 
-    public boolean validTap() {
+    public boolean isValidTap() {
 
         //waiting entre pulsaciones
-        if (lastTapTime + 3 < getTime()) {
+        if (isADifferentTap()) {
 
-            Log.v("time", "time: " +
-                    lastTapTime + " " +
-                            getTime() + " " +
-                            (lastTapTime - getTime()) +
-                            "\n"
-            );
+            Log.v(DEVELOPMENT, "time" + lastTapTime + " " + getTime() + " " + (lastTapTime - getTime()) + "\n" );
 
             lastTapTime = getTime();
             return true;
@@ -122,6 +121,10 @@ public class AsyncLoop extends AsyncTask<Object, Object, Object> {
             lastTapTime = getTime();
             return false;
         }
+    }
+
+    private boolean isADifferentTap() {
+        return lastTapTime + 3 < getTime();
     }
 
     public void setInitialStop(int initialStop) {

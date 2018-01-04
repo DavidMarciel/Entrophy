@@ -57,7 +57,6 @@ public class Launcher extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
     }
@@ -89,12 +88,10 @@ public class Launcher extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -108,7 +105,7 @@ public class Launcher extends AppCompatActivity {
 
     private void initSignalCheckbox(Context applicationContext) {
         CheckBox checkboxSignal = (CheckBox) findViewById(R.id.señal);
-        if(DataStorage.isSinalizable(applicationContext)){
+        if(DataStorage.isSignalizable(applicationContext)){
             checkboxSignal.setChecked(true);
         }
         else{

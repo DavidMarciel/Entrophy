@@ -41,13 +41,15 @@ public class HandlerLaser extends Handler {
     public void move() {
         for (int i = 0; i < letters.length-1 ; i++) {
 
-            int ir_a = (i*(STEPS +1)+1);
+            int nextPointToMove = (i*(STEPS +1)+1);
+            float nextPointX = points.get( nextPointToMove).getX();
+            float nextPointY = points.get( nextPointToMove).getY();
 
-            letters[i].setX(points.get(ir_a).getX());
-            letters[i].setY(points.get(ir_a).getY());
+            letters[i].setX( nextPointX );
+            letters[i].setY( nextPointY );
 
         }
-        mueveUltimaLetra(letters[letters.length-1]);
+        lastLetterMove(letters[letters.length-1]);
     }
 
     /**Mueve unicamente la primera letra, el resto la seguirán
@@ -55,9 +57,11 @@ public class HandlerLaser extends Handler {
      *
      * @param letra letra xSpeed la que seguirán el resto (última en la lista)
      */
-    private void mueveUltimaLetra(Character letra) {
+    private void lastLetterMove(Character letra) {
 
         letra.move();
+
+        //create a new point to move there letters in next steps
         points.add(new Point(letra.getX(), letra.getY()));
         points.remove(0);
 

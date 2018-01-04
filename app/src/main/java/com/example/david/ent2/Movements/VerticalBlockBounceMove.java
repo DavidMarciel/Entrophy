@@ -5,10 +5,9 @@ package com.example.david.ent2.Movements;
  */
 public class VerticalBlockBounceMove extends Move {
 
-    static boolean goToBottom = true;
+    private static boolean goToBottom = true;
 
-    static final float SPEED = 6 /3.5f;
-    private float Y_INITIAL;
+    private static final float SPEED = 6 /3.5f;
 
     public VerticalBlockBounceMove() {
         super();
@@ -16,7 +15,7 @@ public class VerticalBlockBounceMove extends Move {
 
     @Override
     protected void concreteInitialization() {
-        Y_INITIAL = cr.getY();
+
     }
 
     @Override
@@ -42,8 +41,8 @@ public class VerticalBlockBounceMove extends Move {
 
     private void bounceMove() {
 
-        if( y < Y_MIN_SCREEN_SIZE /*+ Y_INITIAL - 150*/ /*-800*/ ) goToBottom = true;
-        else if(Y_MAX_SCREEN_SIZE /*+ Y_INITIAL - 700*/ /*-800*/ < y) goToBottom = false;
+        if( y < Y_MIN_SCREEN_SIZE ) goToBottom = true;
+        else if(Y_MAX_SCREEN_SIZE < y) goToBottom = false;
 
         if(goToBottom){
             y += SPEED;

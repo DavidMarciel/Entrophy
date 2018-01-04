@@ -11,8 +11,8 @@ public class LateralWindMove extends Move {
 
     private float speed;
 
-    final float MAXIMUM_SPEED = 8 /3.5f;    //17
-    final float MINIMUM_SPEED = 3 /3.5f;     //5
+    private final float MAXIMUM_SPEED = 8 /3.5f;    //17
+    private final float MINIMUM_SPEED = 3 /3.5f;     //5
 
     public LateralWindMove() {
         super();
@@ -36,9 +36,6 @@ public class LateralWindMove extends Move {
 
     @Override
     public void move() {
-        //speed debe ser un random con valor max 70
-        //es muy chulo
-
         if( x < X_MAX_SCREEN_SIZE) x += speed;
         else x %= MAXIMUM_SPEED;
 

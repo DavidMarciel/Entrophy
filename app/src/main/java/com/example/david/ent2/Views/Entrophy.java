@@ -34,7 +34,7 @@ public class Entrophy extends Activity {
     private RelativeLayout relativeLayout;
     private static AsyncLoop asyncLoop;
 
-    private static TextView starTapViewer;                      //textView que muestra las pulsaciones hechas
+    private TextView starTapViewer;                      //textView que muestra las pulsaciones hechas
     private Character[] letters = new Character[0];            //array que contiene las letters
     private Handler[] handlers;                        //array que contiene los handlers
     private Counter password;
@@ -52,7 +52,7 @@ public class Entrophy extends Activity {
 //        getIntent().setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.rLayout);
+        RelativeLayout relativeLayout =  findViewById(R.id.rLayout);
         relativeLayout.setBackgroundColor(Color.LTGRAY);
 
         tapNumber = 0;
@@ -67,11 +67,9 @@ public class Entrophy extends Activity {
 
     @Override
     protected void onPause() {
-//        pintaHora(8);
         super.onPause();
         stopMoving();
         clearItems();
-//        pintaHora(9);
     }
 
     private void stopMoving() {
@@ -104,18 +102,14 @@ public class Entrophy extends Activity {
         if (firstTap) {
             firstTap = false;
 
-
             //reinicia pulsadas
             DataStorage.resetSharedPref(password.size(), getApplicationContext());
 
             //si no hay contraseña se pide
-            if (password.size() == 0) {
-                Intent iEnt;
-                iEnt = new Intent(getApplicationContext(), PasswordChange.class);
-                iEnt.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(iEnt);
+            if (isPasswordEmpty()) {
+                askToSetPassword();
             }
-            //si hay contraseña continúa
+            //si hay contraseña continúa inicida el movimiento y las letras guardadas
             else {
                 hasBeenSelected = new ArrayList[password.size()];
             }
@@ -127,58 +121,27 @@ public class Entrophy extends Activity {
 
         //el resto de pulsaciones son clicks
         //solo si no es el mismo click repetido
-        else if (asyncLoop.validTap()) {
+        else if (asyncLoop.isValidTap()) {
 
             updateTapCounter(tapNumber + 1);
 
             hasBeenSelected[tapNumber] = new ArrayList<Character>();
 
-            Log.v("Desarrollo", "Señalar= " + DataStorage.isSinalizable(getApplicationContext()));
+            Log.v("Desarrollo", "Señalar= " + DataStorage.isSignalizable(getApplicationContext()));
 
-            if (DataStorage.isSinalizable(getApplicationContext())) {
-                //señala letters
-                if (letters != null) {
-                    for (int i = 0; i < letters.length; i++) {
+            if (DataStorage.isSignalizable(getApplicationContext())) {
 
-                        if (letters[i].inRange(event)) {
-                            letters[i].selected();
+                addAndSignalSelectedLetters(event);
 
-                            hasBeenSelected[tapNumber].add(letters[i]);
-
-                        } else letters[i].notSelected();
-                    }
-                }
-                //señala letters en manejador
-                if (handlers != null) {
-                    for (int i = 0; i < handlers.length; i++) {
-                        handlers[i].tapAndSignal(event, tapNumber, hasBeenSelected);
-                    }
-                }
             } else {
-                //añade letters pulsadas
-                for (int i = 0; i < letters.length; i++) {
-
-                    if (letters[i].inRange(event)) {
-                        hasBeenSelected[tapNumber].add(letters[i]);
-                    }
-                }
-                //añade letters pulsadas en manejador
-                if (handlers != null) {
-                    for (int i = 0; i < handlers.length; i++) {
-                        handlers[i].tap(event, tapNumber, hasBeenSelected);
-                    }
-                }
-
+                findSelectedLetters(event);
             }
 
             //almacena pulsados y lanza "Result.class"
             tapNumber++;
             if (tapNumber > password.size() - 1) {
-                endTime = System.currentTimeMillis();
-                Log.v("Fin", "Asesinado por Fin" + " tapNumber " + (tapNumber + 1) + " tamaño contraseña " + (password.size() - 1));
-                end();
-                DataStorage.savePossibilities(hasBeenSelected, getApplicationContext());
-                DataStorage.saveElapsedTime(endTime - startTime, getApplicationContext());
+
+                storeInformation();
 
                 //lanza la pantalla Result
 //                Intent i = new Intent(getApplicationContext(), Result.class);
@@ -189,6 +152,63 @@ public class Entrophy extends Activity {
                 startActivity(i);
             }
 
+        }
+    }
+
+    private void storeInformation() {
+        endTime = System.currentTimeMillis();
+        Log.v("Fin", "Fin de BucleAsincrono " + " tapNumber " + (tapNumber + 1) + " tamaño contraseña " + (password.size() - 1));
+        end();
+        DataStorage.savePossibilities(hasBeenSelected, getApplicationContext());
+        DataStorage.saveElapsedTime(endTime - startTime, getApplicationContext());
+    }
+
+    private void askToSetPassword() {
+        Intent iEnt = new Intent(getApplicationContext(), PasswordChange.class);
+        iEnt.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(iEnt);
+    }
+
+    private boolean isPasswordEmpty() {
+        return password.size() == 0;
+    }
+
+    private void addAndSignalSelectedLetters(MotionEvent event) {
+        //señala letters
+        if (letters != null) {
+            for (Character letter : letters) {
+
+                if (letter.inRange(event)) {
+
+                    letter.selected();
+                    hasBeenSelected[tapNumber].add(letter);
+                }
+                else {
+                    letter.notSelected();
+                }
+            }
+        }
+        //señala letters en manejador
+        if (handlers != null) {
+            for (Handler handler : handlers) {
+                handler.tapAndSignal(event, tapNumber, hasBeenSelected);
+            }
+        }
+    }
+
+    private void findSelectedLetters(MotionEvent event) {
+        //añade letters pulsadas
+        for (Character letter : letters) {
+
+            if (letter.inRange(event)) {
+                hasBeenSelected[tapNumber].add(letter);
+            }
+        }
+        //añade letters pulsadas en manejador
+        if (handlers != null) {
+            for (Handler handler : handlers) {
+                handler.tap(event, tapNumber, hasBeenSelected);
+            }
         }
     }
 
@@ -215,7 +235,7 @@ public class Entrophy extends Activity {
         AlphabetsFactory alphabetsFactory = new AlphabetsFactory(getApplicationContext(), relativeLayout);
 
         switch (alphabetsType){
-            case "Dynamic": letters = alphabetsFactory.getLetters(); break;
+            case "Dynamic": letters = alphabetsFactory.getLatinLetters(); break;
             case "Static": letters = alphabetsFactory.getStaticLetters(); break;
             case "World Alphabets": letters = alphabetsFactory.getWorldLetters(); break;
             case "Mixed": letters = alphabetsFactory.getMixedLetters(); break;
@@ -285,7 +305,7 @@ public class Entrophy extends Activity {
             isVerticalyOriented = false;
         }
 
-        Character.setIsOrientationVertical(isVerticalyOriented);
+        Character.setIsOrientationVertical(isVerticalyOriented, getApplicationContext());
         updateCharacteres();
         updateHandlers();
     }
@@ -310,36 +330,12 @@ public class Entrophy extends Activity {
         updateTapCounter(tapNumber);
     }
 
-
-    //no borrar
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        //para dar un movimiento atras
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//
-//            undo();
-//            for(int i = 0; i< letters.length; i++) {
-//                letters[i].notSelected();
-//            }
-//            // Si el listener devuelve true, significa que el evento esta procesado, y nadie debe hacer nada mas
-//            return true;
-//        }
-//        //para las demas cosas, se reenvia el evento al listener habitual
-//        return super.onKeyDown(keyCode, event);
-//    }
-
-//    private void pintaHora(int llamada) {
-//        DateFormat df = new SimpleDateFormat("HH:mm:ss.SSSZ");
-//        String date = df.format(Calendar.getInstance().getTime());
-//        Log.v("tiempo", "tiempo en entrophy: " + date.toString() + " llamada " + llamada + "\n");
-//    }
-
-//    /**
-//     * Muestra las letters seleccionadas en el textview de arriba
+//    /**Muestra las letters seleccionadas en el textview de arriba
+//     * Solo para desarrollo
 //     */
 //    private String muestraLetrasSeleccionadas(MotionEvent event) {
 //
-//        if (asyncLoop.validTap()) {                           //solo si no es el mismo click repetido
+//        if (asyncLoop.isValidTap()) {                           //solo si no es el mismo click repetido
 ////            pulsadas = "";
 //
 //            for (int i = 0; i < letters.length; i++) {

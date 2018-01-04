@@ -8,7 +8,7 @@ public class InfiniteBlockMove extends Move {
     static private float ySpeed;
     static private float xSpeed;
 
-    final float MAXIMUM_SPEED = 6 /3.5f; //inicialmente 6
+    private final float MAXIMUM_SPEED = 6 /3.5f; //inicialmente 6
 
     public InfiniteBlockMove() {
         super();
