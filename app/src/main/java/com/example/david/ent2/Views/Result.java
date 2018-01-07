@@ -142,13 +142,13 @@ public class Result extends Activity {
         if(correct) {
             labelAndTime = resources.getString( R.string.rightPassword, (((float) time) / 1000));
             tvTime.setText( labelAndTime);
-            tvTime.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
+            tvTime.setTextSize(dimens.getKeyResultLettersSize() /** 0.75f*/);
             tvTime.setTextColor(Color.rgb(43, 173, 69)/*verde*/);
         }
         else{
             labelAndTime = resources.getString( R.string.wrongPassword, (((float) time) / 1000));
             tvTime.setText( labelAndTime);
-            tvTime.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
+            tvTime.setTextSize(dimens.getKeyResultLettersSize() /** 0.75f*/);
             tvTime.setTextColor(Color.RED);
         }
 
@@ -169,7 +169,7 @@ public class Result extends Activity {
     private void showTap(Character c, int x, int y) {
         tvItemsPerTap[x][y] = new TextView(getApplicationContext());
 
-        tvItemsPerTap[x][y].setX(dimens.getResultLettersPositionX() + x * dimens.getResultPositionAdditionX());
+        tvItemsPerTap[x][y].setX(dimens.getResultLettersPositionX() + x * dimens.getResultLettersPositionAdditionX());
         tvItemsPerTap[x][y].setY(dimens.getResultLettersPositionY() + y * dimens.getResultLettersPositionAdditionY());
         tvItemsPerTap[x][y].setText( String.valueOf(c.getValue()));
         tvItemsPerTap[x][y].setTextSize(dimens.getResultLettersSize());

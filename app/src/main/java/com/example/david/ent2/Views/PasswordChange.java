@@ -48,6 +48,7 @@ public class PasswordChange extends Activity {
     private TextView[] selectedLetters;
     private Button newLetterButton;
     private CheckBox moveLettersInPasswordChange;
+    Dimens dimens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class PasswordChange extends Activity {
 
         moveLettersInPasswordChange = findViewById(R.id.moverEnContraseña);
         updateSignal(getApplicationContext());
-        Dimens.getDimens(getApplicationContext());
+        dimens = Dimens.getDimens(getApplicationContext());
 
         letters = new Character[0];
 
@@ -265,11 +266,13 @@ public class PasswordChange extends Activity {
     }
 
     private void generateSelectedLabels(Character c, int x) {
+
         selectedLetters[x] = new TextView(getApplicationContext());
-        selectedLetters[x].setX(200 + (x * 60));
-        selectedLetters[x].setY(650);
-        selectedLetters[x].setText(c.getValue() + "");
-        selectedLetters[x].setTextSize(25f);
+        selectedLetters[x].setX(dimens.getChangePasswordPasswordPositionX()
+                + (x * dimens.getChangePasswordPasswordPositionAdditionX()));
+        selectedLetters[x].setY(dimens.getChangePasswordPasswordPositionY());
+        selectedLetters[x].setText( String.valueOf(c.getValue()));
+        selectedLetters[x].setTextSize(dimens.getChangePasswordPasswordPositionSize());
         selectedLetters[x].setTextColor(c.getColor());
         selectedLetters[x].setTypeface(TypeFaces.getTipeFace(getApplicationContext(), c.getLetterType()), Typeface.BOLD);
         relativeLayout.addView(selectedLetters[x]);

@@ -96,19 +96,19 @@ public class Response extends Activity {
         if(acertado) {
             String labelAndTime = resources.getString( R.string.GrantAccess, (((float) time) / 1000));
             timeLabel.setText( labelAndTime);
-            timeLabel.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
+            timeLabel.setTextSize(dimens.getKeyResultLettersSize() /** 0.75f*/);
             timeLabel.setTextColor(Color.rgb(43, 173, 69)/*verde*/);
         }
         else{
             String labelAndTime = resources.getString( R.string.DenyAccess, (((float) time) / 1000));
             timeLabel.setText( labelAndTime);
-            timeLabel.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
+            timeLabel.setTextSize(dimens.getKeyResultLettersSize() /** 0.75f*/);
             timeLabel.setTextColor(Color.RED);
         }
 
 
-        Typeface letterType = TypeFaces.getTipeFace(getApplicationContext(), 4);
-        timeLabel.setTypeface(letterType);
+//        Typeface letterType = TypeFaces.getTipeFace(getApplicationContext(), 4);
+//        timeLabel.setTypeface(letterType);
         timeLabel.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
         relativeLayout.addView(timeLabel);

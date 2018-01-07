@@ -11,7 +11,7 @@ import com.example.david.ent2.Movements.Move;
 
 import java.util.ArrayList;
 
-/**
+/**Delegate to create the Alphabets
  * Created by david on 04/01/2018.
  */
 

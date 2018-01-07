@@ -10,7 +10,7 @@ import com.example.david.ent2.Movements.Move;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
+/**Delegated to instanciate the Alphabets
  * Created by david on 04/01/2018.
  */
 

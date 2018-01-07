@@ -10,7 +10,7 @@ import com.example.david.ent2.Letters.Counter;
 
 import java.util.ArrayList;
 
-/**
+/**It is responsable to store/retrieve data from Shared Preferences
  * Created by david on 15/03/2015.
  */
 public class DataStorage {

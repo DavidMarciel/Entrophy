@@ -3,7 +3,7 @@ package com.example.david.ent2.Letters;
 import android.content.Context;
 import android.graphics.Typeface;
 
-/**
+/**Delegated to get the font type of the characters
  * Created by david on 15/03/2015.
  */
 public class TypeFaces {

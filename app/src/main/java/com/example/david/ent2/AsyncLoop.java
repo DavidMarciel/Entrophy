@@ -10,7 +10,7 @@ import com.example.david.ent2.Letters.Character;
 import com.example.david.ent2.Handlers.Handler;
 import com.example.david.ent2.Storage.DataStorage;
 
-/**
+/**This is the main loop, it moves the letters and handlers on the screen
  * Created by david on 19/05/2014.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -18,10 +18,10 @@ public class AsyncLoop extends AsyncTask<Object, Object, Object> {
 
     private static final String DEVELOPMENT = "Desarrollo";
     private Character[] letters;
-    private int time;
-    private int lastTapTime;
-    private int initialStop;
     private Handler[] handler;
+    private int time;
+    private int initialStop;
+    private int lastTapTime;
     private int speed;
 
     public AsyncLoop(Character[] letters, Handler[] handler, Context context) {

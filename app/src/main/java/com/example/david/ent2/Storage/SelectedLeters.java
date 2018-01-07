@@ -8,7 +8,7 @@ import com.example.david.ent2.Letters.Counter;
 
 import java.util.ArrayList;
 
-/**
+/**This class support with the use of letters and taps in views
  * Created by david on 07/01/2018.
  */
 

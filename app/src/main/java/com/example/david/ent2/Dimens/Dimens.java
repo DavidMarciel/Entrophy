@@ -10,7 +10,9 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-/**Contiene las medidas de los diferentes modelos de telefono utilizados
+/**
+ * Contiene las medidas de los diferentes modelos de telefono utilizados
+ * Deberia moverse a un recurso dimens
  * Created by david on 03/09/2014.
  */
 public class Dimens {
@@ -67,11 +69,37 @@ public class Dimens {
     public static final int LATIN_LETTERS_POSITION_7 = 625;
     public static final int LATIN_LETTERS_POSITION_8 = 775;
     public static final int LATIN_LETTERS_POSITION_9 = 900;
-    public static final int LATIN_LETTERS_POSITION_10 =1025;
+    public static final int LATIN_LETTERS_POSITION_10 = 1025;
 
     public static final int LATIN_LETTERS_POSITION_Y = 0;
     public static final int LATIN_LETTERS_END_POSITION_Y = 630;
     public static final int LATIN_LETTERS_ADDITION_Y = 25;
+
+    //resultado clave
+    public static int KEY_RESULT_POSITION_X = 150;
+    public static int KEY_RESULT_POSITION_ADDITION_X = 90;
+    public static int KEY_RESULT_POSITION_Y = 150;
+    public static int KEY_RESULT_POSITION_ADDITION_Y = 80;
+    public static float KEY_RESULT_LETTERS_SIZE = 27f;
+
+    public static int RESULT_LETTERS_POSITION_X = KEY_RESULT_POSITION_X + KEY_RESULT_POSITION_ADDITION_X;
+    public static int RESULT_LETTERS_POSITION_ADDITION_X = KEY_RESULT_POSITION_ADDITION_X;
+    public static int RESULT_LETTERS_POSITION_Y = 220;
+    public static int RESULT_LETTERS_POSITION_ADDITION_Y = 50;
+    public static float RESULT_LETTERS_SIZE = 27f;
+
+    //resultado aciertos posibilidades
+    public static int RESULT_LETTERS_HIT_POSITION_X = 200;
+    public static int RESULT_LETTERS_HIT_POSITION_ADDITION_X = KEY_RESULT_POSITION_ADDITION_X;
+    public static int RESULT_LETTERS_HIT_POSITION_Y = 90;
+    public static int RESULT_LETTERS_HIT_POSITION_ADDITION_Y = RESULT_LETTERS_POSITION_ADDITION_Y;
+    public static float RESULT_LETTERS_HIT_SIZE = KEY_RESULT_LETTERS_SIZE;
+
+    //posicion password in changePassword
+    public static int CHANGEPASSWORD_PASSWORD_POSITION_X = 175;
+    public static int CHANGEPASSWORD_PASSWORD_POSITION_ADDITION_X = 75;
+    public static int CHANGEPASSWORD_PASSWORD_POSITION_Y = 650;
+    public static float CHANGEPASSWORD_PASSWORD_POSITION_SIZE = 37f;
 
 
     //dispositivo seleccionado
@@ -81,6 +109,7 @@ public class Dimens {
     private int keyResultPositionX = (int) (75 * proportion);
     private int keyResultPositionAdditionX = (int) (75 * proportion);
     private int keyResultPositionY = (int) (75 * proportion);
+    private int keyResultPositionAdditionY = 60;
     private float keyResultLettersSize = (25f * proportion);
 
     //resultado posibilidades
@@ -96,6 +125,17 @@ public class Dimens {
     private int resultLettersHitPositionY = resultLettersPositionY - 4;
     private int resultLettersHitPositionAdditionY = resultLettersPositionAdditionY;
     private float resultLettersHitSize = (int) (25f * proportion);
+
+    //posicion password in changePassword
+    private int changePasswordPasswordPositionX = 175;
+    private int changePasswordPasswordPositionAdditionX = 60;
+    private int changePasswordPasswordPositionY = 650;
+    private float changePasswordPasswordPositionSize = 25f;
+    private int resultLettersPositionAdditionX;
+
+    public int getResultLettersPositionAdditionX() {
+        return resultLettersPositionAdditionX;
+    }
 
     public int getKeyResultPositionX() {
         return keyResultPositionX;
@@ -153,6 +193,26 @@ public class Dimens {
         return resultLettersHitSize;
     }
 
+    public int getKeyResultPositionAdditionY() {
+        return keyResultPositionAdditionY;
+    }
+
+    public int getChangePasswordPasswordPositionX() {
+        return changePasswordPasswordPositionX;
+    }
+
+    public int getChangePasswordPasswordPositionAdditionX() {
+        return changePasswordPasswordPositionAdditionX;
+    }
+
+    public int getChangePasswordPasswordPositionY() {
+        return changePasswordPasswordPositionY;
+    }
+
+    public float getChangePasswordPasswordPositionSize() {
+        return changePasswordPasswordPositionSize;
+    }
+
     private Dimens() {
     }
 
@@ -167,7 +227,7 @@ public class Dimens {
             dimens.getProportions(context);
             //proportion = getProportions(context);
             //recalculateValues();
-            Log.v("Proporciones", "la proporcion es: "+proportion);
+            Log.v("Proporciones", "la proporcion es: " + proportion);
             Toast.makeText(context, "las proporciones son= " + proportion, Toast.LENGTH_SHORT).show();
         }
         return dimens;
@@ -177,14 +237,14 @@ public class Dimens {
         return proportion;
     }
 
-    /**Devuelve la proporción de la pantalla con respecto x la de referencia (Jiayu G4)
+    /**
+     * Devuelve la proporción de la pantalla con respecto x la de referencia (Jiayu G4)
      * Se utiliza para redimensionar de forma proporcional x otros dispositivos,
      * multiplica la dimensión actual por el valor obtenido por esta función y
      * el resultado debería mostrarse en una posición proporcional correcta respecto al
      * dispositivo de referencia
      *
      * @param context contexto desde el que se llama
-     * @return proporción
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void getProportions(Context context) {
@@ -197,11 +257,10 @@ public class Dimens {
         float width;// = size.x;
         float height;// = size.y;
 
-        if( context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             width = size.x;
             height = size.y;
-        }
-        else{
+        } else {
             width = size.y;
             height = size.x;
         }
@@ -211,44 +270,35 @@ public class Dimens {
 
         proportion = Math.min(width, height);
         recalculateValues();
-        //return Math.min(width, height);
     }
 
     private void recalculateValues() {
 
-        /*//resultado clave
-        keyResultPositionX = (int) (75 * proportion);
-        keyResultPositionAdditionX = (int) (75 * proportion);
-        keyResultPositionY = (int) (75 * proportion);
-        keyResultLettersSize = (25f * proportion);
+        keyResultPositionX = (int) (KEY_RESULT_POSITION_X * proportion);
+        keyResultPositionAdditionX = (int) (KEY_RESULT_POSITION_ADDITION_X * proportion);
+        keyResultPositionY = (int) (KEY_RESULT_POSITION_Y * proportion);
+        keyResultPositionAdditionY = (int) (KEY_RESULT_POSITION_ADDITION_Y * proportion);
+        keyResultLettersSize = (KEY_RESULT_LETTERS_SIZE * proportion);
 
-        //resultado posibilidades
-        resultLettersPositionY = (int) (150 * proportion);
-        resultLettersPositionAdditionY = (int) (25 * proportion * 1.1);
-        resultLettersSize = (15f * proportion);
+        resultLettersPositionX = (int) (RESULT_LETTERS_POSITION_X * proportion);
+        resultLettersPositionAdditionX = (int) (RESULT_LETTERS_POSITION_ADDITION_X * proportion);
 
-        //resultado aciertos posibilidades
-        resultLettersHitSize = (int) (25f * proportion);*/
+        resultLettersPositionX = keyResultPositionX;
+        resultPositionAdditionX = keyResultPositionAdditionX;
+        resultLettersPositionY = (int) (RESULT_LETTERS_POSITION_Y * proportion);
+        resultLettersPositionAdditionY = (int) (RESULT_LETTERS_POSITION_ADDITION_Y * proportion * 1.1);
+        resultLettersSize = (RESULT_LETTERS_SIZE * proportion);
 
+        resultLettersHitPositionX = keyResultPositionX + 25;
+        resultLettersHitPositionAdditionX = keyResultPositionAdditionX;
+        resultLettersHitPositionY = resultLettersPositionY - 4;
+        resultLettersHitPositionAdditionY = resultLettersPositionAdditionY;
+        resultLettersHitSize = (int) (RESULT_LETTERS_HIT_SIZE * proportion);
 
-         keyResultPositionX = (int) (75 * proportion);
-         keyResultPositionAdditionX = (int) (75 * proportion);
-         keyResultPositionY = (int) (75 * proportion);
-         keyResultLettersSize = (25f * proportion);
-
-        //resultado posibilidades
-         resultLettersPositionX = keyResultPositionX;
-         resultPositionAdditionX = keyResultPositionAdditionX;
-         resultLettersPositionY = (int) (150 * proportion);
-         resultLettersPositionAdditionY = (int) (25 * proportion * 1.1);
-         resultLettersSize = (15f * proportion);
-
-        //resultado aciertos posibilidades
-         resultLettersHitPositionX = keyResultPositionX + 25;
-         resultLettersHitPositionAdditionX = keyResultPositionAdditionX;
-         resultLettersHitPositionY = resultLettersPositionY - 4;
-         resultLettersHitPositionAdditionY = resultLettersPositionAdditionY;
-         resultLettersHitSize = (int) (25f * proportion);
+        changePasswordPasswordPositionX = (int) (CHANGEPASSWORD_PASSWORD_POSITION_X * proportion);
+        changePasswordPasswordPositionAdditionX = (int) (CHANGEPASSWORD_PASSWORD_POSITION_ADDITION_X * proportion);
+        changePasswordPasswordPositionY = (int) (CHANGEPASSWORD_PASSWORD_POSITION_Y * proportion);
+        changePasswordPasswordPositionSize = (CHANGEPASSWORD_PASSWORD_POSITION_SIZE * proportion);
     }
 
 }

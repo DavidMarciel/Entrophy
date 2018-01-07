@@ -2,7 +2,6 @@ package com.example.david.ent2.Views;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -17,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.david.ent2.Letters.Counter;
 import com.example.david.ent2.Storage.DataStorage;
 import com.example.david.ent2.AsyncLoop;
 import com.example.david.ent2.Letters.AlphabetsFactory;
@@ -127,13 +125,7 @@ public class Entrophy extends Activity {
 
             ArrayList<Character> selectedsThisTap;// = new ArrayList<Character>();
 
-            Log.v("Desarrollo", "Señalar= " + DataStorage.isSignalizable(getApplicationContext()));
-
-            if (isSignalizable) {
-                selectedsThisTap = addAndSignalSelectedLetters(event);
-            } else {
-                selectedsThisTap = findSelectedLetters(event);
-            }
+            selectedsThisTap = getSelectedLetters(event);
 
             //almacena pulsados
             tapNumber++;
@@ -156,6 +148,18 @@ public class Entrophy extends Activity {
         }
     }
 
+    private ArrayList<Character> getSelectedLetters(MotionEvent event) {
+        ArrayList<Character> selectedsThisTap;
+        Log.v("Desarrollo", "Señalar= " + DataStorage.isSignalizable(getApplicationContext()));
+
+        if (isSignalizable) {
+            selectedsThisTap = findAndSignalSelectedLetters(event);
+        } else {
+            selectedsThisTap = findSelectedLetters(event);
+        }
+        return selectedsThisTap;
+    }
+
     private boolean lastTap() {
         return tapNumber > selectedLeters.getPasswordLength() -1; // password.size() - 1;
     }
@@ -170,7 +174,7 @@ public class Entrophy extends Activity {
         return selectedLeters.getPasswordLength() == 0;
     }
 
-    private ArrayList<Character> addAndSignalSelectedLetters(MotionEvent event) {
+    private ArrayList<Character> findAndSignalSelectedLetters(MotionEvent event) {
 
         ArrayList<Character> selectedsThisTap = new ArrayList<>();
         //señala letters
@@ -273,6 +277,7 @@ public class Entrophy extends Activity {
             case "Mixed": theLetters = alphabetsFactory.getMixedLetters(); break;
         }
         Log.v("Entrophy", "Alphabet Type created");
+
         return theLetters;
     }
 
@@ -293,14 +298,14 @@ public class Entrophy extends Activity {
      */
     private void updateCharacteres() {
 
-        for (int i = 0; i < letters.length; i++) {
-            letters[i].update();
+        for (Character letter : letters) {
+            letter.update();
         }
     }
 
     private void updateHandlers() {
-        for (int i = 0; i < handlers.length; i++) {
-            handlers[i].update();
+        for (Handler handler : handlers) {
+            handler.update();
         }
     }
 
@@ -313,8 +318,8 @@ public class Entrophy extends Activity {
 
     /**
      * Inicia el movimiento de las letters
-     * @param letters
-     * @param handlers
+     * @param letters array of letters to move
+     * @param handlers array of handlers to move
      */
     private void initAsyncLoop(Character[] letters, Handler[] handlers) {
         Log.v("Entrophy", "initAsyncLoop starts");

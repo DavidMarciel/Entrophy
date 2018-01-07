@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-/**
+/**A Handler represents an item whose work is to move some letters with relationship between them.
  * Created by david on 11/06/2014.
+ *
  */
 public abstract class Handler {
 

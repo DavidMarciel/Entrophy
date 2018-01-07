@@ -3,7 +3,7 @@ package com.example.david.ent2.Movements;
 import com.example.david.ent2.Letters.Character;
 import com.example.david.ent2.Dimens.Dimens;
 
-/**
+/**A Move encapsulates the way a character can move
  * Created by david on 11/06/2014.
  */
 public abstract class Move {

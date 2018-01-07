@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.example.david.ent2.Dimens.Dimens;
 import com.example.david.ent2.Movements.Move;
 
-/**
+/**A Character represents an item on the screen, it has it's own move, whose define the way it moves
  * Created by david on 11/06/2014.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
