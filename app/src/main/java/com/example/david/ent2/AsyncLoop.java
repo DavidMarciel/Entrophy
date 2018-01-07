@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.david.ent2.Letters.Character;
 import com.example.david.ent2.Handlers.Handler;
+import com.example.david.ent2.Storage.DataStorage;
 
 /**
  * Created by david on 19/05/2014.

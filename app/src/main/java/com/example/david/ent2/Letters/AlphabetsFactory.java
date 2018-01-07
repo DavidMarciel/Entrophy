@@ -5,10 +5,8 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.david.ent2.Movements.Move;
+import com.example.david.ent2.Dimens.Dimens;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -46,7 +44,7 @@ public class AlphabetsFactory {             //Factory Method Patron
     }
 
     public Character[] getLatinLetters() {
-
+        Log.v("AlphabetsFactory", "call to getLatinLetters");
         ArrayList<Character> lettersList = Instantiator.instantiateLatinLetters( context, relativeLayout);
         return getListAsArray(lettersList);
     }
@@ -58,6 +56,7 @@ public class AlphabetsFactory {             //Factory Method Patron
 
     public Character[] getStaticLetters() {
 
+        Log.v("AlphabetsFactory", "call to getStaticLetters");
         ArrayList<Character> lettersList = Instantiator.instantiateLatinLetters( context, relativeLayout);
         return getListAsArray(lettersList);
     }

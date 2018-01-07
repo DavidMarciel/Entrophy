@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.david.ent2.DataStorage;
+import com.example.david.ent2.Storage.DataStorage;
 import com.example.david.ent2.R;
 
 
@@ -100,11 +100,11 @@ public class Launcher extends AppCompatActivity {
 
     private void updateSpeedLabel(int speed) {
         TextView tv = (TextView) findViewById(R.id.etiquetaVelocidad);
-        tv.setText(""+speed);
+        tv.setText( String.valueOf(speed));
     }
 
     private void initSignalCheckbox(Context applicationContext) {
-        CheckBox checkboxSignal = (CheckBox) findViewById(R.id.señal);
+        CheckBox checkboxSignal = findViewById(R.id.señal);
         if(DataStorage.isSignalizable(applicationContext)){
             checkboxSignal.setChecked(true);
         }

@@ -6,7 +6,9 @@ import android.view.MotionEvent;
 import com.example.david.ent2.Dimens.Dimens;
 import com.example.david.ent2.Letters.Character;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
@@ -78,18 +80,33 @@ public abstract class Handler {
         return selected;
     }
 
-    public void tapAndSignal(MotionEvent event, int numPulsacion, ArrayList<Character>[] hittedCharacters) {
+    public ArrayList<Character> tapAndSignal(MotionEvent event){
+
+        ArrayList<Character> selectedsInHandler = new ArrayList<>();
 
         for (Character letter : letters) {
 
             if (letter.inRange(event)) {
                 letter.selected();
 
-                hittedCharacters[numPulsacion].add(letter);
+                selectedsInHandler.add(letter);
 
             } else letter.notSelected();
         }
+        return selectedsInHandler;
     }
+//    public void tapAndSignal(MotionEvent event, int numPulsacion, ArrayList<Character>[] hittedCharacters) {
+//
+//        for (Character letter : letters) {
+//
+//            if (letter.inRange(event)) {
+//                letter.selected();
+//
+//                hittedCharacters[numPulsacion].add(letter);
+//
+//            } else letter.notSelected();
+//        }
+//    }
 
 
     protected void verticalMove(Character c) {
@@ -163,4 +180,5 @@ public abstract class Handler {
             letter.update();
         }
     }
+
 }

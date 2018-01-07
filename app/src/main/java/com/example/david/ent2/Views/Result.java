@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.david.ent2.DataStorage;
+import com.example.david.ent2.Storage.DataStorage;
 import com.example.david.ent2.Dimens.Dimens;
 import com.example.david.ent2.Letters.Character;
 import com.example.david.ent2.Letters.Counter;
@@ -32,6 +32,7 @@ public class Result extends Activity {
     private TextView[][] tvItemsPerTap;    //pulsados
     private TextView[] numberOfSelectedItems;        //super índice
     private TextView[] tvHits;       //acertados
+    private Dimens dimens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class Result extends Activity {
         password = DataStorage.getPassword(getApplicationContext());
         Character[][] itemsPerTap = DataStorage.getPossibilities(getApplicationContext());
         long time = DataStorage.getElapsedTime(getApplicationContext());
+        dimens = Dimens.getDimens(getApplicationContext());
 
         updateTextViews(password, itemsPerTap);
         boolean hitted = isCorrect();
@@ -131,21 +133,22 @@ public class Result extends Activity {
 
     private void showTime(boolean correct, long time) {
         TextView tvTime = new TextView(getApplicationContext());
-        tvTime.setX(Dimens.KEY_RESULT_POSITION_X);
-        tvTime.setY(Dimens.KEY_RESULT_POSITION_Y - 60);
+        tvTime.setX(dimens.getKeyResultPositionX());
+        tvTime.setY(dimens.getKeyResultPositionY() - 60);
 
         Resources resources = getResources();
+        String labelAndTime;
 
         if(correct) {
-            String labelAndTime = resources.getString( R.string.rightPassword, (((float) time) / 1000));
+            labelAndTime = resources.getString( R.string.rightPassword, (((float) time) / 1000));
             tvTime.setText( labelAndTime);
-            tvTime.setTextSize(Dimens.KEY_RESULT_LETTERS_SIZE * 0.75f);
+            tvTime.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
             tvTime.setTextColor(Color.rgb(43, 173, 69)/*verde*/);
         }
         else{
-            String labelAndTime = resources.getString( R.string.wrongPassword, (((float) time) / 1000));
+            labelAndTime = resources.getString( R.string.wrongPassword, (((float) time) / 1000));
             tvTime.setText( labelAndTime);
-            tvTime.setTextSize(Dimens.KEY_RESULT_LETTERS_SIZE * 0.75f);
+            tvTime.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
             tvTime.setTextColor(Color.RED);
         }
 
@@ -154,10 +157,10 @@ public class Result extends Activity {
 
     private void printPasswordCharacter(Character c, int x) {
         tvPassword[x] = new TextView(getApplicationContext());
-        tvPassword[x].setX(Dimens.KEY_RESULT_POSITION_X + x * Dimens.KEY_RESULT_POSITION_ADDITION_X);
-        tvPassword[x].setY(Dimens.KEY_RESULT_POSITION_Y);
+        tvPassword[x].setX(dimens.getKeyResultPositionX() + x * dimens.getKeyResultPositionAdditionX());
+        tvPassword[x].setY(dimens.getKeyResultPositionY());
         tvPassword[x].setText( String.valueOf(c.getValue()));
-        tvPassword[x].setTextSize(Dimens.KEY_RESULT_LETTERS_SIZE);
+        tvPassword[x].setTextSize(dimens.getKeyResultLettersSize());
         tvPassword[x].setTextColor(c.getColor());
         tvPassword[x].setTypeface(TypeFaces.getTipeFace(getApplicationContext(), c.getLetterType()), Typeface.BOLD);
         relativeLayout.addView(tvPassword[x]);
@@ -166,10 +169,10 @@ public class Result extends Activity {
     private void showTap(Character c, int x, int y) {
         tvItemsPerTap[x][y] = new TextView(getApplicationContext());
 
-        tvItemsPerTap[x][y].setX(Dimens.RESULT_LETTERS_POSITION_X + x * Dimens.RESULT_LETTERS_POSITION_ADDITION_X);
-        tvItemsPerTap[x][y].setY(Dimens.RESULT_LETTERS_POSITION_Y + y * Dimens.RESULT_LETTERS_POSITION_ADDITION_Y);
+        tvItemsPerTap[x][y].setX(dimens.getResultLettersPositionX() + x * dimens.getResultPositionAdditionX());
+        tvItemsPerTap[x][y].setY(dimens.getResultLettersPositionY() + y * dimens.getResultLettersPositionAdditionY());
         tvItemsPerTap[x][y].setText( String.valueOf(c.getValue()));
-        tvItemsPerTap[x][y].setTextSize(Dimens.RESULT_LETTERS_SIZE);
+        tvItemsPerTap[x][y].setTextSize(dimens.getResultLettersSize());
         tvItemsPerTap[x][y].setTextColor(c.getColor());
         tvItemsPerTap[x][y].setTypeface(TypeFaces.getTipeFace(getApplicationContext(), c.getLetterType()), Typeface.BOLD);
         relativeLayout.addView(tvItemsPerTap[x][y]);
@@ -178,10 +181,10 @@ public class Result extends Activity {
     private void showHit(Character c, int x, int y) {
         tvItemsPerTap[x][y] = new TextView(getApplicationContext());
 
-        tvItemsPerTap[x][y].setX(Dimens.RESULT_LETTERS_HIT_POSITION_X + Dimens.RESULT_LETTERS_HIT_POSITION_ADDITION_X * x);
-        tvItemsPerTap[x][y].setY(Dimens.RESULT_LETTERS_HIT_POSITION_Y + Dimens.RESULT_LETTERS_HIT_POSITION_ADDITION_Y * y);
+        tvItemsPerTap[x][y].setX(dimens.getResultLettersHitPositionX() + dimens.getResultLettersHitPositionAdditionX() * x);
+        tvItemsPerTap[x][y].setY(dimens.getResultLettersHitPositionY() + dimens.getResultLettersHitPositionAdditionY() * y);
         tvItemsPerTap[x][y].setText( String.valueOf(c.getValue()));
-        tvItemsPerTap[x][y].setTextSize(Dimens.RESULT_LETTERS_HIT_SIZE);
+        tvItemsPerTap[x][y].setTextSize(dimens.getResultLettersHitSize());
         tvItemsPerTap[x][y].setTextColor(c.getColor());
         tvItemsPerTap[x][y].setTypeface(TypeFaces.getTipeFace(getApplicationContext(), c.getLetterType()), Typeface.BOLD);
         relativeLayout.addView(tvItemsPerTap[x][y]);
@@ -189,25 +192,25 @@ public class Result extends Activity {
 
     private void showNumber(int cuantos, int x) {
         numberOfSelectedItems[x] = new TextView(getApplicationContext());
-        numberOfSelectedItems[x].setX(Dimens.KEY_RESULT_POSITION_X
-                + Dimens.KEY_RESULT_LETTERS_SIZE
-                + x * Dimens.KEY_RESULT_POSITION_ADDITION_X);
-        numberOfSelectedItems[x].setY(Dimens.KEY_RESULT_POSITION_Y);
+        numberOfSelectedItems[x].setX(dimens.getKeyResultPositionX()
+                + dimens.getKeyResultLettersSize()
+                + x * dimens.getKeyResultPositionAdditionX());
+        numberOfSelectedItems[x].setY(dimens.getKeyResultPositionY());
         numberOfSelectedItems[x].setText("  " + cuantos);
-        numberOfSelectedItems[x].setTextSize(Dimens.KEY_RESULT_LETTERS_SIZE / 2);
+        numberOfSelectedItems[x].setTextSize(dimens.getKeyResultLettersSize() / 2);
         numberOfSelectedItems[x].setTextColor(Color.BLACK);
         relativeLayout.addView(numberOfSelectedItems[x]);
     }
 
     private void signalHit(int x) {
         tvHits[x] = new TextView(getApplicationContext());
-        tvHits[x].setX(Dimens.KEY_RESULT_POSITION_X
-                + Dimens.KEY_RESULT_LETTERS_SIZE
-                + x * Dimens.KEY_RESULT_POSITION_ADDITION_X);
-        tvHits[x].setY(Dimens.KEY_RESULT_POSITION_Y
-                + Dimens.KEY_RESULT_LETTERS_SIZE);
+        tvHits[x].setX(dimens.getKeyResultPositionX()
+                + dimens.getKeyResultLettersSize()
+                + x * dimens.getKeyResultPositionAdditionX());
+        tvHits[x].setY(dimens.getKeyResultPositionY()
+                + dimens.getKeyResultLettersSize());
         tvHits[x].setText("  A");
-        tvHits[x].setTextSize(Dimens.KEY_RESULT_LETTERS_SIZE / 2);
+        tvHits[x].setTextSize(dimens.getKeyResultLettersSize() / 2);
         tvHits[x].setTextColor(Color.RED);
         relativeLayout.addView(tvHits[x]);
     }

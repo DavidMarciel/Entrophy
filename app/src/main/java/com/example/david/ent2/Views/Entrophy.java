@@ -2,6 +2,7 @@ package com.example.david.ent2.Views;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -16,14 +17,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.david.ent2.DataStorage;
+import com.example.david.ent2.Letters.Counter;
+import com.example.david.ent2.Storage.DataStorage;
 import com.example.david.ent2.AsyncLoop;
 import com.example.david.ent2.Letters.AlphabetsFactory;
 import com.example.david.ent2.Letters.Character;
-import com.example.david.ent2.Letters.Counter;
 import com.example.david.ent2.Handlers.Handler;
 import com.example.david.ent2.Handlers.LettersHandlerFactory;
 import com.example.david.ent2.R;
+import com.example.david.ent2.Storage.SelectedLeters;
 
 import java.util.ArrayList;
 
@@ -31,20 +33,16 @@ import java.util.ArrayList;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class Entrophy extends Activity {
 
-    private RelativeLayout relativeLayout;
-    private static AsyncLoop asyncLoop;
+    private AsyncLoop asyncLoop;
 
     private TextView starTapViewer;                      //textView que muestra las pulsaciones hechas
     private Character[] letters = new Character[0];            //array que contiene las letters
     private Handler[] handlers;                        //array que contiene los handlers
-    private Counter password;
 
-    private int tapNumber;
+    private int tapNumber = 0;
     private boolean firstTap = true;
-    private ArrayList<Character>[] hasBeenSelected;
-
-    private long startTime, endTime;                   //para calcular el tiempo tardado
-
+    private SelectedLeters selectedLeters;
+    private boolean isSignalizable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +50,23 @@ public class Entrophy extends Activity {
 //        getIntent().setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        setBackgroundColor();
+    }
+
+    private void setBackgroundColor() {
         RelativeLayout relativeLayout =  findViewById(R.id.rLayout);
         relativeLayout.setBackgroundColor(Color.LTGRAY);
-
-        tapNumber = 0;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v("Entrophy", "onResume Entrophy starts");
         initItems();
-        initAsyncLoop();
+        Log.v("Entrophy", "onResume Entrophy after initItems");
+        initAsyncLoop(this.letters, this.handlers);
+        Log.v("Entrophy", "onResume Entrophy ends");
     }
 
     @Override
@@ -102,20 +106,16 @@ public class Entrophy extends Activity {
         if (firstTap) {
             firstTap = false;
 
-            //reinicia pulsadas
-            DataStorage.resetSharedPref(password.size(), getApplicationContext());
-
             //si no hay contraseña se pide
             if (isPasswordEmpty()) {
                 askToSetPassword();
             }
-            //si hay contraseña continúa inicida el movimiento y las letras guardadas
-            else {
-                hasBeenSelected = new ArrayList[password.size()];
-            }
+
+            //reinicia pulsadas
+            selectedLeters.restartStorageTaps(getApplicationContext());
+            selectedLeters.setStartTime( System.currentTimeMillis());
 
             //inicia movimiento
-            startTime = System.currentTimeMillis();
             asyncLoop.execute();
         }
 
@@ -123,25 +123,27 @@ public class Entrophy extends Activity {
         //solo si no es el mismo click repetido
         else if (asyncLoop.isValidTap()) {
 
-            updateTapCounter(tapNumber + 1);
+            updateTapCounterViewer(tapNumber + 1);
 
-            hasBeenSelected[tapNumber] = new ArrayList<Character>();
+            ArrayList<Character> selectedsThisTap;// = new ArrayList<Character>();
 
             Log.v("Desarrollo", "Señalar= " + DataStorage.isSignalizable(getApplicationContext()));
 
-            if (DataStorage.isSignalizable(getApplicationContext())) {
-
-                addAndSignalSelectedLetters(event);
-
+            if (isSignalizable) {
+                selectedsThisTap = addAndSignalSelectedLetters(event);
             } else {
-                findSelectedLetters(event);
+                selectedsThisTap = findSelectedLetters(event);
             }
 
-            //almacena pulsados y lanza "Result.class"
+            //almacena pulsados
             tapNumber++;
-            if (tapNumber > password.size() - 1) {
+            selectedLeters.addTapLetters(tapNumber, selectedsThisTap);
 
-                storeInformation();
+            //lanza "Result.class" con la respuesta
+            if (lastTap()) {
+
+                selectedLeters.storeInformation( getApplicationContext());
+                end();
 
                 //lanza la pantalla Result
 //                Intent i = new Intent(getApplicationContext(), Result.class);
@@ -151,16 +153,11 @@ public class Entrophy extends Activity {
                 Intent i = new Intent(getApplicationContext(), Response.class);
                 startActivity(i);
             }
-
         }
     }
 
-    private void storeInformation() {
-        endTime = System.currentTimeMillis();
-        Log.v("Fin", "Fin de BucleAsincrono " + " tapNumber " + (tapNumber + 1) + " tamaño contraseña " + (password.size() - 1));
-        end();
-        DataStorage.savePossibilities(hasBeenSelected, getApplicationContext());
-        DataStorage.saveElapsedTime(endTime - startTime, getApplicationContext());
+    private boolean lastTap() {
+        return tapNumber > selectedLeters.getPasswordLength() -1; // password.size() - 1;
     }
 
     private void askToSetPassword() {
@@ -170,10 +167,12 @@ public class Entrophy extends Activity {
     }
 
     private boolean isPasswordEmpty() {
-        return password.size() == 0;
+        return selectedLeters.getPasswordLength() == 0;
     }
 
-    private void addAndSignalSelectedLetters(MotionEvent event) {
+    private ArrayList<Character> addAndSignalSelectedLetters(MotionEvent event) {
+
+        ArrayList<Character> selectedsThisTap = new ArrayList<>();
         //señala letters
         if (letters != null) {
             for (Character letter : letters) {
@@ -181,7 +180,7 @@ public class Entrophy extends Activity {
                 if (letter.inRange(event)) {
 
                     letter.selected();
-                    hasBeenSelected[tapNumber].add(letter);
+                    selectedsThisTap.add(letter);
                 }
                 else {
                     letter.notSelected();
@@ -191,31 +190,36 @@ public class Entrophy extends Activity {
         //señala letters en manejador
         if (handlers != null) {
             for (Handler handler : handlers) {
-                handler.tapAndSignal(event, tapNumber, hasBeenSelected);
+                selectedsThisTap.addAll( handler.tapAndSignal(event));
             }
         }
+        return selectedsThisTap;
     }
 
-    private void findSelectedLetters(MotionEvent event) {
+    private ArrayList<Character> findSelectedLetters(MotionEvent event) {
+
+        ArrayList<Character> selectedsThisTap = new ArrayList<>();
+
         //añade letters pulsadas
         for (Character letter : letters) {
 
             if (letter.inRange(event)) {
-                hasBeenSelected[tapNumber].add(letter);
+                selectedsThisTap.add(letter);
             }
         }
         //añade letters pulsadas en manejador
         if (handlers != null) {
             for (Handler handler : handlers) {
-                handler.tap(event, tapNumber, hasBeenSelected);
+                selectedsThisTap.addAll( handler.tap(event));
             }
         }
+        return selectedsThisTap;
     }
 
-    private void updateTapCounter(int tapIndex) {
-        String taps = "";
+    private void updateTapCounterViewer(int tapIndex) {
+        StringBuilder taps = new StringBuilder();
         for (int i = 0; i < tapIndex; i++) {
-            taps += " *";
+            taps.append(" *");
         }
         starTapViewer.setText(taps);
     }
@@ -226,35 +230,53 @@ public class Entrophy extends Activity {
 
     private void initItems() {
 
-        relativeLayout = (RelativeLayout) findViewById(R.id.rLayout);
+        Log.v("Entrophy", "initItems starts");
+        RelativeLayout relativeLayout = findViewById(R.id.rLayout);
         relativeLayout.setPadding(0, 0, 0, 0); //marcar el borde del area que se esta usando
 
+        updatePortraitLandscapeOrientation(getApplication().getResources().getConfiguration());  //inicializa la orientacion
+
+        letters = initLetters( relativeLayout);
+        handlers = initHandlers( relativeLayout);
+        selectedLeters = new SelectedLeters( getApplicationContext());
+        isSignalizable = DataStorage.isSignalizable(getApplicationContext());
+
+        generateSelectedLabels( relativeLayout);
+    }
+
+    private Handler[] initHandlers(RelativeLayout relativeLayout) {
+
+        //usando los handlers
+        LettersHandlerFactory lettersHandlerFactory = new LettersHandlerFactory(getApplicationContext(), relativeLayout);
+        Handler[] theHandlers = lettersHandlerFactory.getHandlers();
+
+        Log.v("Entrophy", "initItems after handlers");
+        Log.v("handlers.length", ""+theHandlers.length);
+
+        return theHandlers;
+    }
+
+    private Character[] initLetters(RelativeLayout relativeLayout) {
+
         String alphabetsType = DataStorage.getAlphabetsType(this);
+        Log.v("Entrophy", "Alphabet Type"+ alphabetsType);
 
         //usando un instanciador de letters
         AlphabetsFactory alphabetsFactory = new AlphabetsFactory(getApplicationContext(), relativeLayout);
 
+        Character[] theLetters = null;
+
         switch (alphabetsType){
-            case "Dynamic": letters = alphabetsFactory.getLatinLetters(); break;
-            case "Static": letters = alphabetsFactory.getStaticLetters(); break;
-            case "World Alphabets": letters = alphabetsFactory.getWorldLetters(); break;
-            case "Mixed": letters = alphabetsFactory.getMixedLetters(); break;
+            case "Dynamic": theLetters = alphabetsFactory.getLatinLetters(); break;
+            case "Static": theLetters = alphabetsFactory.getStaticLetters(); break;
+            case "World Alphabets": theLetters = alphabetsFactory.getWorldLetters(); break;
+            case "Mixed": theLetters = alphabetsFactory.getMixedLetters(); break;
         }
-
-
-        //usando los handlers
-        LettersHandlerFactory lettersHandlerFactory = new LettersHandlerFactory(getApplicationContext(), relativeLayout);
-        handlers = lettersHandlerFactory.getHandlers();
-
-        updatePortraitLandscapeOrientation(getApplication().getResources().getConfiguration());  //inicializa la orientacion
-
-        password = DataStorage.getPassword(getApplicationContext());
-
-        generateSelectedLabels();
-
+        Log.v("Entrophy", "Alphabet Type created");
+        return theLetters;
     }
 
-    private void generateSelectedLabels() {
+    private void generateSelectedLabels(RelativeLayout relativeLayout) {
 
         starTapViewer = new TextView(getApplicationContext());
         starTapViewer.setTextColor(Color.GRAY);
@@ -284,20 +306,28 @@ public class Entrophy extends Activity {
 
     private void clearItems() {
         letters = new Character[0];
+
+        RelativeLayout relativeLayout = findViewById(R.id.rLayout);
         relativeLayout.removeAllViews();
     }
 
     /**
      * Inicia el movimiento de las letters
+     * @param letters
+     * @param handlers
      */
-    private void initAsyncLoop() {
+    private void initAsyncLoop(Character[] letters, Handler[] handlers) {
+        Log.v("Entrophy", "initAsyncLoop starts");
         asyncLoop = null;
-        asyncLoop = new AsyncLoop(this.letters, this.handlers, getApplicationContext());
+        asyncLoop = new AsyncLoop(letters, handlers, getApplicationContext());
+        Log.v("Entrophy", "initAsyncLoop ends");
     }
 
 
     private void updatePortraitLandscapeOrientation(Configuration newConfig) {
         boolean isVerticalyOriented;// = Character.ORIENTACION_VERTICAL;
+
+        Log.v("Entrophy", "updatePortraitLandscapeOrientation starts");
 
         if (newConfig.orientation == newConfig.ORIENTATION_PORTRAIT) {            //esta de pie
             isVerticalyOriented = true;
@@ -306,8 +336,15 @@ public class Entrophy extends Activity {
         }
 
         Character.setIsOrientationVertical(isVerticalyOriented, getApplicationContext());
-        updateCharacteres();
-        updateHandlers();
+
+        try{
+            updateCharacteres();
+        }catch (Exception e){ }
+        try{
+            updateHandlers();
+        }catch (Exception e){ }
+
+        Log.v("Entrophy", "updatePortraitLandscapeOrientation ends");
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -319,15 +356,6 @@ public class Entrophy extends Activity {
         int height = size.y;
 
         Toast.makeText(this, "Dimensiones de la pantalla: x=" + width + " y= " + height, Toast.LENGTH_LONG).show();
-    }
-
-    private void undo() {
-
-        if (tapNumber == 0) {
-            finish();
-        } else tapNumber--;
-
-        updateTapCounter(tapNumber);
     }
 
 //    /**Muestra las letters seleccionadas en el textview de arriba

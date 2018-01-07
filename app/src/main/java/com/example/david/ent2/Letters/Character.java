@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ public class Character {
     private static boolean isOrientationVertical = ORIENTATION_VERTICAL;
 
     //deviation
-    static private float proportion = 0;
+    static private float proportion;
     static private double MAXIMUM_RANGE_DISTANCE = Dimens.MAXIMUM_RANGE_DISTANCE;
     static private int VERTICAL_Y_DEVIATION = Dimens.VERTICAL_Y_DEVIATION;
     static private int VERTICAL_X_DEVIATION = Dimens.VERTICAL_X_DEVIATION;
@@ -65,6 +66,8 @@ public class Character {
 
         setLetterType(context, letterType);
 
+        Log.v("Entrophy", "Caracter created " + value + " color " + color
+                + " x " + getX() + " y " + getY());
     }
 
     public Character(char letter, int color, int letterType, Context context) {
@@ -130,7 +133,9 @@ public class Character {
 
     public static void setIsOrientationVertical(boolean isOrientationVertical, Context context) {
         Character.isOrientationVertical = isOrientationVertical;
-        proportion = Dimens.getProportion(context);
+        //proportion = Dimens.getDimens(context);
+        proportion = Dimens.getDimens(context).getProportion();
+        Log.v("Entrophy", "Caracter setIsOrientationVertical");
     }
 
     public void selected() {
@@ -226,6 +231,7 @@ public class Character {
      */
     public void showIn(RelativeLayout relativeLayout){
         relativeLayout.addView(textView);
+        Log.v( "Add", "Added new Character");
     }
 
     public void setMove(int movementType) {

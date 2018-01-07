@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.david.ent2.AsyncLoop;
-import com.example.david.ent2.DataStorage;
+import com.example.david.ent2.Storage.DataStorage;
 import com.example.david.ent2.Dimens.Dimens;
 import com.example.david.ent2.Letters.AlphabetsFactory;
 import com.example.david.ent2.Letters.Character;
@@ -64,6 +64,7 @@ public class PasswordChange extends Activity {
 
         moveLettersInPasswordChange = findViewById(R.id.moverEnContraseña);
         updateSignal(getApplicationContext());
+        Dimens.getDimens(getApplicationContext());
 
         letters = new Character[0];
 

@@ -7,12 +7,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.david.ent2.DataStorage;
+import com.example.david.ent2.Storage.DataStorage;
 import com.example.david.ent2.Dimens.Dimens;
 import com.example.david.ent2.Letters.Character;
 import com.example.david.ent2.Letters.Counter;
@@ -29,6 +28,7 @@ public class Response extends Activity {
     private RelativeLayout relativeLayout;
     private Counter password;
     private int hits;
+    private Dimens dimens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class Response extends Activity {
         password = DataStorage.getPassword(getApplicationContext());
         Character[][] itemsPerTap = DataStorage.getPossibilities(getApplicationContext());
         long time = DataStorage.getElapsedTime(getApplicationContext());
+        dimens = Dimens.getDimens(getApplicationContext());
 
         updateTextViews(itemsPerTap);
         boolean hitted = correct();
@@ -87,21 +88,21 @@ public class Response extends Activity {
 
     private void showTime(boolean acertado, long time) {
         TextView timeLabel = new TextView(getApplicationContext());
-        timeLabel.setX(Dimens.KEY_RESULT_POSITION_X);
-        timeLabel.setY(Dimens.KEY_RESULT_POSITION_Y - 60);
+        timeLabel.setX(dimens.getKeyResultPositionX());
+        timeLabel.setY(dimens.getKeyResultPositionY() - 60);
 
         Resources resources = getResources();
 
         if(acertado) {
             String labelAndTime = resources.getString( R.string.GrantAccess, (((float) time) / 1000));
             timeLabel.setText( labelAndTime);
-            timeLabel.setTextSize(Dimens.KEY_RESULT_LETTERS_SIZE * 0.75f);
+            timeLabel.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
             timeLabel.setTextColor(Color.rgb(43, 173, 69)/*verde*/);
         }
         else{
             String labelAndTime = resources.getString( R.string.DenyAccess, (((float) time) / 1000));
             timeLabel.setText( labelAndTime);
-            timeLabel.setTextSize(Dimens.KEY_RESULT_LETTERS_SIZE * 0.75f);
+            timeLabel.setTextSize(dimens.getKeyResultLettersSize() * 0.75f);
             timeLabel.setTextColor(Color.RED);
         }
 

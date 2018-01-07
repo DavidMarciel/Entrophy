@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -13,9 +14,6 @@ import android.widget.Toast;
  * Created by david on 03/09/2014.
  */
 public class Dimens {
-
-    //dispositivo seleccionado
-    private static float proportion = 0f;//1
 
     //caracteristicas de la pantalla
     public static final float Y_MAX_SCREEN_SIZE = 1080;//1400;
@@ -76,34 +74,106 @@ public class Dimens {
     public static final int LATIN_LETTERS_ADDITION_Y = 25;
 
 
+    //dispositivo seleccionado
+    private static float proportion = 1f;//1
+
     //resultado clave
-    public static int KEY_RESULT_POSITION_X = (int) (75 * proportion);
-    public static int KEY_RESULT_POSITION_ADDITION_X = (int) (75 * proportion);
-    public static int KEY_RESULT_POSITION_Y = (int) (75 * proportion);
-    public static float KEY_RESULT_LETTERS_SIZE = (25f * proportion);
+    private int keyResultPositionX = (int) (75 * proportion);
+    private int keyResultPositionAdditionX = (int) (75 * proportion);
+    private int keyResultPositionY = (int) (75 * proportion);
+    private float keyResultLettersSize = (25f * proportion);
 
     //resultado posibilidades
-    public static final int RESULT_LETTERS_POSITION_X = KEY_RESULT_POSITION_X;
-    public static final int RESULT_LETTERS_POSITION_ADDITION_X = KEY_RESULT_POSITION_ADDITION_X;
-    public static int RESULT_LETTERS_POSITION_Y = (int) (150 * proportion);
-    public static int RESULT_LETTERS_POSITION_ADDITION_Y = (int) (25 * proportion * 1.1);
-    public static float RESULT_LETTERS_SIZE = (15f * proportion);
+    private int resultLettersPositionX = keyResultPositionX;
+    private int resultPositionAdditionX = keyResultPositionAdditionX;
+    private int resultLettersPositionY = (int) (150 * proportion);
+    private int resultLettersPositionAdditionY = (int) (25 * proportion * 1.1);
+    private float resultLettersSize = (15f * proportion);
 
     //resultado aciertos posibilidades
-    public static final int RESULT_LETTERS_HIT_POSITION_X = KEY_RESULT_POSITION_X + 25;
-    public static final int RESULT_LETTERS_HIT_POSITION_ADDITION_X = KEY_RESULT_POSITION_ADDITION_X;
-    public static final int RESULT_LETTERS_HIT_POSITION_Y = RESULT_LETTERS_POSITION_Y - 4;
-    public static final int RESULT_LETTERS_HIT_POSITION_ADDITION_Y = RESULT_LETTERS_POSITION_ADDITION_Y;
-    public static float RESULT_LETTERS_HIT_SIZE = (int) (25f * proportion);
+    private int resultLettersHitPositionX = keyResultPositionX + 25;
+    private int resultLettersHitPositionAdditionX = keyResultPositionAdditionX;
+    private int resultLettersHitPositionY = resultLettersPositionY - 4;
+    private int resultLettersHitPositionAdditionY = resultLettersPositionAdditionY;
+    private float resultLettersHitSize = (int) (25f * proportion);
+
+    public int getKeyResultPositionX() {
+        return keyResultPositionX;
+    }
+
+    public int getKeyResultPositionAdditionX() {
+        return keyResultPositionAdditionX;
+    }
+
+    public int getKeyResultPositionY() {
+        return keyResultPositionY;
+    }
+
+    public float getKeyResultLettersSize() {
+        return keyResultLettersSize;
+    }
+
+    public int getResultLettersPositionX() {
+        return resultLettersPositionX;
+    }
+
+    public int getResultPositionAdditionX() {
+        return resultPositionAdditionX;
+    }
+
+    public int getResultLettersPositionY() {
+        return resultLettersPositionY;
+    }
+
+    public int getResultLettersPositionAdditionY() {
+        return resultLettersPositionAdditionY;
+    }
+
+    public float getResultLettersSize() {
+        return resultLettersSize;
+    }
+
+    public int getResultLettersHitPositionX() {
+        return resultLettersHitPositionX;
+    }
+
+    public int getResultLettersHitPositionAdditionX() {
+        return resultLettersHitPositionAdditionX;
+    }
+
+    public int getResultLettersHitPositionY() {
+        return resultLettersHitPositionY;
+    }
+
+    public int getResultLettersHitPositionAdditionY() {
+        return resultLettersHitPositionAdditionY;
+    }
+
+    public float getResultLettersHitSize() {
+        return resultLettersHitSize;
+    }
 
     private Dimens() {
     }
 
-    public static float getProportion(Context context) {
-        if (proportion == 0) {
-            proportion = getProportions(context);
+    private static boolean firstAccess = true;
+    private static Dimens dimens;
+
+    public static Dimens getDimens(Context context) {
+        if (firstAccess) {
+            firstAccess = false;
+
+            dimens = new Dimens();
+            dimens.getProportions(context);
+            //proportion = getProportions(context);
+            //recalculateValues();
+            Log.v("Proporciones", "la proporcion es: "+proportion);
             Toast.makeText(context, "las proporciones son= " + proportion, Toast.LENGTH_SHORT).show();
         }
+        return dimens;
+    }
+
+    public float getProportion() {
         return proportion;
     }
 
@@ -117,7 +187,7 @@ public class Dimens {
      * @return proporción
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private static float getProportions(Context context) {
+    private void getProportions(Context context) {
 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
@@ -139,26 +209,46 @@ public class Dimens {
         width = width / 720;
         height = height / 1080;
 
+        proportion = Math.min(width, height);
         recalculateValues();
-
-        return Math.min(width, height);
+        //return Math.min(width, height);
     }
 
-    private static void recalculateValues() {
+    private void recalculateValues() {
 
-        //resultado clave
-        KEY_RESULT_POSITION_X = (int) (75 * proportion);
-        KEY_RESULT_POSITION_ADDITION_X = (int) (75 * proportion);
-        KEY_RESULT_POSITION_Y = (int) (75 * proportion);
-        KEY_RESULT_LETTERS_SIZE = (25f * proportion);
+        /*//resultado clave
+        keyResultPositionX = (int) (75 * proportion);
+        keyResultPositionAdditionX = (int) (75 * proportion);
+        keyResultPositionY = (int) (75 * proportion);
+        keyResultLettersSize = (25f * proportion);
 
         //resultado posibilidades
-        RESULT_LETTERS_POSITION_Y = (int) (150 * proportion);
-        RESULT_LETTERS_POSITION_ADDITION_Y = (int) (25 * proportion * 1.1);
-        RESULT_LETTERS_SIZE = (15f * proportion);
+        resultLettersPositionY = (int) (150 * proportion);
+        resultLettersPositionAdditionY = (int) (25 * proportion * 1.1);
+        resultLettersSize = (15f * proportion);
 
         //resultado aciertos posibilidades
-        RESULT_LETTERS_HIT_SIZE = (int) (25f * proportion);
+        resultLettersHitSize = (int) (25f * proportion);*/
+
+
+         keyResultPositionX = (int) (75 * proportion);
+         keyResultPositionAdditionX = (int) (75 * proportion);
+         keyResultPositionY = (int) (75 * proportion);
+         keyResultLettersSize = (25f * proportion);
+
+        //resultado posibilidades
+         resultLettersPositionX = keyResultPositionX;
+         resultPositionAdditionX = keyResultPositionAdditionX;
+         resultLettersPositionY = (int) (150 * proportion);
+         resultLettersPositionAdditionY = (int) (25 * proportion * 1.1);
+         resultLettersSize = (15f * proportion);
+
+        //resultado aciertos posibilidades
+         resultLettersHitPositionX = keyResultPositionX + 25;
+         resultLettersHitPositionAdditionX = keyResultPositionAdditionX;
+         resultLettersHitPositionY = resultLettersPositionY - 4;
+         resultLettersHitPositionAdditionY = resultLettersPositionAdditionY;
+         resultLettersHitSize = (int) (25f * proportion);
     }
 
 }
