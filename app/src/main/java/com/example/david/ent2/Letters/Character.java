@@ -205,18 +205,6 @@ public class Character {
 
     }
 
-    public boolean containedBy(Character[] items){
-
-        for (Character item : items) {
-            if (this.getValue() == item.getValue()
-                    && this.getColor() == item.getColor()) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
     public int getLetterType() {
         return letterType;
     }

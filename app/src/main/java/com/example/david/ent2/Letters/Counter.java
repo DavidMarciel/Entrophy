@@ -17,7 +17,7 @@ public class Counter {
 
     public boolean add(Character c){
         if(  c == null
-          || counter >= numberOfLetters){
+          || isFull()){
             return false;
         }
         else{
@@ -37,9 +37,8 @@ public class Counter {
         return Math.min(counter, numberOfLetters);
     }
 
-    public boolean full() {
-        if (counter >= numberOfLetters) return true;
-        else return false;
+    public boolean isFull() {
+        return counter >= numberOfLetters;
     }
 
 }

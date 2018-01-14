@@ -5,7 +5,7 @@ package com.example.david.ent2.Movements;
  */
 public class HorizontalBlockBounceMove extends Move {
 
-    static boolean startToTheRight = true;
+    private static boolean startToTheRight = true;
 
     private static final float SPEED = 5 /3.5f;
 

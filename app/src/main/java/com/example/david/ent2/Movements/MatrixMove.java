@@ -11,8 +11,8 @@ public class MatrixMove extends Move {
 
     private float ySpeed;
 
-    final float MAXIMUM_SPEED = 8 /3.5f;    //17
-    final float MINIMUM_SPEED = 3 /3.5f;     //5
+    private final float MAXIMUM_SPEED = 8 /3.5f;    //17
+    private final float MINIMUM_SPEED = 3 /3.5f;     //5
 
     public MatrixMove() {
         super();

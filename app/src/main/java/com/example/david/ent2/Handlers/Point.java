@@ -4,9 +4,11 @@ package com.example.david.ent2.Handlers;
  * Created by david on 19/04/2015.
  */
 public class Point {
-    float x, y;
 
-    public Point(float x, float y) {
+    private float x;
+    private float y;
+
+    Point(float x, float y) {
         this.x = x;
         this.y = y;
     }

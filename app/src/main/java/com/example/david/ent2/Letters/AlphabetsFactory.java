@@ -96,11 +96,5 @@ public class AlphabetsFactory {             //Factory Method Patron
         return getListAsArray(lettersList);
     }
 
-    private void logTime(int call) {
-        DateFormat df = new SimpleDateFormat("HH:mm:ss.SSSZ");
-        String date = df.format(Calendar.getInstance().getTime());
-        Log.v("tiempo", "tiempo en instanciador: " + date + " llamada "+ call +"\n");
-    }
-
 }
 

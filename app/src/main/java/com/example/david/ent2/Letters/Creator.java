@@ -1,10 +1,7 @@
 package com.example.david.ent2.Letters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.david.ent2.Dimens.Dimens;
 import com.example.david.ent2.Movements.Move;
@@ -71,7 +68,7 @@ public class Creator {
         return letters;
     }
 
-    static ArrayList<Character> createLatinLetters(Context context, RelativeLayout relativeLayout, int firstLetter, int rgb, int movementType, int xPosition, boolean rigth, int letterType) {
+    static ArrayList<Character> createLatinLetters(Context context, RelativeLayout relativeLayout, int firstLetter, int rgb, int movementType, int xPosition, boolean moveRigth, int letterType) {
 
         ArrayList<Character> letters = new ArrayList<>();
 
@@ -79,18 +76,16 @@ public class Creator {
         int yDistance;
         int yPosition;
 
-        if (rigth == true) {
+        if (moveRigth) {
             yPosition = Dimens.LATIN_LETTERS_POSITION_Y;
             yDistance = Dimens.LATIN_LETTERS_ADDITION_Y;
         } else {
             //el tamaño es 1050 por eso uso 1025
             // solo se puede ustilizar 950 para que sea compatible con el modo apaisado uso 925
             yPosition = Dimens.LATIN_LETTERS_END_POSITION_Y;
-            ;
             yDistance = -Dimens.LATIN_LETTERS_ADDITION_Y;
         }
 
-        TextView tv;
         Character cr;
 
         for (int i = 0; i < numLetters; i++) {
@@ -106,7 +101,7 @@ public class Creator {
         return letters;
     }
 
-    private static ArrayList<Character> createLatinLetterMix(Context context, RelativeLayout relativeLayout, int firstLetter, int rgb, int moveType, int xPosition, boolean right, int letterType,
+    private static ArrayList<Character> createLatinLetterMix(Context context, RelativeLayout relativeLayout, int firstLetter, int rgb, int moveType, int xPosition, boolean moveRight, int letterType,
                                                              int firstLetter2, int rgb2, int moveType2, int xPosition2, boolean right2, int letterType2) {
 
         ArrayList<Character> letters = new ArrayList<>();
@@ -116,14 +111,13 @@ public class Creator {
         int yPosition;
 
 
-        if (right == true) {
+        if (moveRight) {
             yPosition = Dimens.LATIN_LETTERS_POSITION_Y;
             yDistance = Dimens.LATIN_LETTERS_ADDITION_Y;
         } else {
             //el tamaño es 1050 por eso uso 1025
             // solo se puede ustilizar 950 para que sea compatible con el modo apaisado uso 925
             yPosition = Dimens.LATIN_LETTERS_END_POSITION_Y;
-            ;
             yDistance = -Dimens.LATIN_LETTERS_ADDITION_Y;
         }
 
@@ -150,7 +144,7 @@ public class Creator {
         return letters;
     }
 
-    static ArrayList<Character> createNumbers(Context context, RelativeLayout relativeLayout, int firstLetter, int rgb, int movementType, int xPosition, boolean right, int letterType) {
+    static ArrayList<Character> createNumbers(Context context, RelativeLayout relativeLayout, int firstLetter, int rgb, int movementType, int xPosition, boolean moveRight, int letterType) {
 
         ArrayList<Character> letters = new ArrayList<>();
 
@@ -159,7 +153,7 @@ public class Creator {
         int yPosition;
 
 
-        if (right == true) {
+        if (moveRight) {
             yPosition = Dimens.LATIN_LETTERS_POSITION_Y;
             yDistance = Dimens.LATIN_LETTERS_ADDITION_Y * 2.5f;
         } else {
@@ -184,13 +178,13 @@ public class Creator {
         return letters;
     }
 
-    static ArrayList<Character> createLetters(Context context, RelativeLayout relativeLayout, int firstLetter, int numLetters, int rgb, int movementType,
+    static ArrayList<Character> createLetters(Context context, RelativeLayout relativeLayout, int firstLetter, int rgb, int movementType,
                                               int positionX, int positionY, int xDistance, int yDistance, int letterType) {
 
         ArrayList<Character> letters = new ArrayList<>();
         Character cr;
 
-        for (int i = 0; i < numLetters; i++) {
+        for (int i = 0; i < 26; i++) {
 
             char value = (char) (firstLetter + i);
             cr = new Character(value, relativeLayout, context, rgb, 0f, positionX + xDistance * i, positionY + yDistance * i, movementType, letterType);
@@ -291,7 +285,6 @@ public class Creator {
 
         //rangos xSpeed crear: 0x622-0x623, 0x628-0x63A, 0x641-0x64A
 
-        int color = rgb;
         int LETTERS_PER_ROW = 3 -1; //en realidad son 4
         int x = 0;
         int y = 0;
@@ -307,7 +300,7 @@ public class Creator {
 
             char value = (char)(FIRST_LETTER+i);
 
-            cr = getCaracterArabe(context, relativeLayout, color, x, y, value);
+            cr = getCaracterArabe(context, relativeLayout, rgb, x, y, value);
             letters.add(cr);
 
             if (x < LETTERS_PER_ROW) x++;
@@ -322,7 +315,7 @@ public class Creator {
         for(i = 0; i< NUMBER_OF_LETTERS; i++){
 
             char value = (char)(FIRST_LETTER+i);
-            cr = getCaracterArabe(context, relativeLayout, color, x, y, value);
+            cr = getCaracterArabe(context, relativeLayout, rgb, x, y, value);
             letters.add(cr);
 
             if (x < LETTERS_PER_ROW) x++;
@@ -332,13 +325,13 @@ public class Creator {
         }
 
         //rangos xSpeed crear: 0x641-0x64A
-        final int FIRST_LETTER2 = 0x0641;
-        final int NUMBER_OF_LETTERS2 = 0x0658-FIRST_LETTER;
+        FIRST_LETTER = 0x0641;
+        NUMBER_OF_LETTERS = 0x0658-FIRST_LETTER;
 
-        for(i = 0; i< 10; i++){     //son solo 10 letters
+        for(i = 0; i< NUMBER_OF_LETTERS; i++){     //son solo 10 letters
 
-            char value = (char)(FIRST_LETTER2+i);
-            cr = getCaracterArabe(context, relativeLayout, color, x, y, value);
+            char value = (char)(FIRST_LETTER+i);
+            cr = getCaracterArabe(context, relativeLayout, rgb, x, y, value);
             letters.add(cr);
 
             if (x < LETTERS_PER_ROW) x++;
@@ -370,7 +363,7 @@ public class Creator {
         for(i = 0; i< NUMBER_OF_LETTERS3; i++){     //son solo 10 letters
 
             char value = (char)(FIRST_LETTER3+i);
-            cr =  getCaracterArabe(context, relativeLayout, color, x, y, value);
+            cr =  getCaracterArabe(context, relativeLayout, rgb, x, y, value);
             letters.add(cr);
 
             if (x < LETTERS_PER_ROW) x++;

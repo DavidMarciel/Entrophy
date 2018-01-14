@@ -99,9 +99,8 @@ public class DataStorage {
 
     public static long getElapsedTime(Context context) {
         SharedPreferences sh = context.getSharedPreferences(ENTROPHY, Context.MODE_PRIVATE);
-        long elapsedTime = sh.getLong(ELAPSED_TIME, 0);
 
-        return elapsedTime;
+        return sh.getLong(ELAPSED_TIME, 0);
     }
 
     public static void savePossibilities(ArrayList<ArrayList<Character>> choosenCharacters, Context applicationContext) {

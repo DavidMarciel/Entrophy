@@ -120,15 +120,7 @@ public class Result extends Activity {
 
     private boolean isCorrect() {
 
-        boolean correct = false;
-
-        if(hits == password.size()){
-            correct = true;
-        }
-        else{
-            correct = false;
-        }
-        return correct;
+        return hits == password.size();
     }
 
     private void showTime(boolean correct, long time) {
@@ -142,13 +134,13 @@ public class Result extends Activity {
         if(correct) {
             labelAndTime = resources.getString( R.string.rightPassword, (((float) time) / 1000));
             tvTime.setText( labelAndTime);
-            tvTime.setTextSize(dimens.getKeyResultLettersSize() /** 0.75f*/);
+            tvTime.setTextSize(dimens.getKeyResultLettersSize() /* * 0.75f*/);
             tvTime.setTextColor(Color.rgb(43, 173, 69)/*verde*/);
         }
         else{
             labelAndTime = resources.getString( R.string.wrongPassword, (((float) time) / 1000));
             tvTime.setText( labelAndTime);
-            tvTime.setTextSize(dimens.getKeyResultLettersSize() /** 0.75f*/);
+            tvTime.setTextSize(dimens.getKeyResultLettersSize() /* * 0.75f*/);
             tvTime.setTextColor(Color.RED);
         }
 
@@ -190,13 +182,13 @@ public class Result extends Activity {
         relativeLayout.addView(tvItemsPerTap[x][y]);
     }
 
-    private void showNumber(int cuantos, int x) {
+    private void showNumber(int numberOfElements, int x) {
         numberOfSelectedItems[x] = new TextView(getApplicationContext());
         numberOfSelectedItems[x].setX(dimens.getKeyResultPositionX()
                 + dimens.getKeyResultLettersSize()
                 + x * dimens.getKeyResultPositionAdditionX());
         numberOfSelectedItems[x].setY(dimens.getKeyResultPositionY());
-        numberOfSelectedItems[x].setText("  " + cuantos);
+        numberOfSelectedItems[x].setText("  " + numberOfElements);
         numberOfSelectedItems[x].setTextSize(dimens.getKeyResultLettersSize() / 2);
         numberOfSelectedItems[x].setTextColor(Color.BLACK);
         relativeLayout.addView(numberOfSelectedItems[x]);

@@ -5,9 +5,9 @@ package com.example.david.ent2.Movements;
  */
 public class VerticalBounceMove extends Move {
 
-    boolean goingBottom = false;
+    private boolean goingBottom = false;
 
-    final float SPEED = 5 /3.5f;
+    private final float SPEED = 5 /3.5f;
 
     public VerticalBounceMove() {
         super();

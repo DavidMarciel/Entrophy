@@ -35,22 +35,22 @@ public class Instantiator {
 
     static Character[] instantiateLaserLetters(Context context, RelativeLayout relativeLayout){
 
-        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'a', 26, Color.rgb(70,70,70), 0, 500, 50, 0, 40, TypeFaces.O4B_03);
+        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'a', Color.rgb(70,70,70), 0, 500, 50, 0, 40, TypeFaces.O4B_03);
         return lettersAsArray(letters);
     }
 
     static Character[] instantiateSnakeLetters(Context context, RelativeLayout relativeLayout){
-        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'A', 26, Color.rgb(70,70,70), 0, 200, 50, 0, 40, TypeFaces.DEFAULT);
+        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'A', Color.rgb(70,70,70), 0, 200, 50, 0, 40, TypeFaces.DEFAULT);
         return lettersAsArray(letters);
     }
 
     static Character[] instantiateLateralWindLetters(Context context, RelativeLayout relativeLayout, int c){
-        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'A', 26, c, Move.LATERAL_WIND_MOVE, 50, 10, 0, 42, TypeFaces.DEFAULT);
+        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'A', c, Move.LATERAL_WIND_MOVE, 50, 10, 0, 42, TypeFaces.DEFAULT);
         return lettersAsArray(letters);
     }
 
     static Character[] instantiateLateralWindLettersLowerCase(Context context, RelativeLayout relativeLayout, int c){
-        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'a', 26, c, Move.LATERAL_WIND_MOVE, 350, 1080, 0, -42, TypeFaces.O4B_03);
+        ArrayList<Character> letters = Creator.createLetters(context, relativeLayout, 'a', c, Move.LATERAL_WIND_MOVE, 350, 1080, 0, -42, TypeFaces.O4B_03);
         return lettersAsArray(letters);
     }
 
@@ -61,10 +61,10 @@ public class Instantiator {
         //matrix
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'a',
                 Color.rgb(43, 173, 69), Move.MATRIX_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_1, false, 0));
+                Dimens.LATIN_LETTERS_POSITION_1, false, TypeFaces.DEFAULT));
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'A',
                 Color.rgb(43, 173, 69), Move.MATRIX_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_6, true, 0));
+                Dimens.LATIN_LETTERS_POSITION_6, true, TypeFaces.DEFAULT));
 
         //viento lateral
         letters.addAll( Arrays.asList( instantiateLateralWindLetters(context,
@@ -75,38 +75,38 @@ public class Instantiator {
         //letters colores sin mezclar
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'A',
                 Color.rgb(0,0,0), Move.LINE_BOUNCE_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_2, true, 0));
+                Dimens.LATIN_LETTERS_POSITION_2, true, TypeFaces.DEFAULT));
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'a',
                 Color.rgb(177, 12, 228), Move.LINE_BOUNCE_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_3, true, TypeFaces.AEROLITE_BOLD));
+                Dimens.LATIN_LETTERS_POSITION_3, true, TypeFaces.GLORIA_HALLELUJAH));
 
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'A',
                 Color.rgb(252,147,17), Move.LINE_BOUNCE_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_4, true, 0));
+                Dimens.LATIN_LETTERS_POSITION_4, true, TypeFaces.DEFAULT));
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'a',
                 Color.rgb(255,0,0), Move.LINE_BOUNCE_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_10, true, TypeFaces.BLKCHCRY));
+                Dimens.LATIN_LETTERS_POSITION_10, true, TypeFaces.GLORIA_HALLELUJAH));
 
 
         //letters colores sin mezclar
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'A',
                 Color.rgb(177, 12, 228), Move.LINE_BOUNCE_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_8, true, 0));
+                Dimens.LATIN_LETTERS_POSITION_8, true, TypeFaces.DEFAULT));
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'a',
                 Color.rgb(0,0,0), Move.LINE_BOUNCE_MOVE,
                 Dimens.LATIN_LETTERS_POSITION_7, true, TypeFaces.GLORIA_HALLELUJAH));
 
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'A',
                 Color.rgb(255,0,0), Move.LINE_BOUNCE_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_5, true, 0));
+                Dimens.LATIN_LETTERS_POSITION_5, true, TypeFaces.DEFAULT));
         letters.addAll( Creator.createLatinLetters(context, relativeLayout, 'a',
                 Color.rgb(252,147,17), Move.LINE_BOUNCE_MOVE,
-                Dimens.LATIN_LETTERS_POSITION_9, true, TypeFaces.NEUROPOLITICAL));
+                Dimens.LATIN_LETTERS_POSITION_9, true, TypeFaces.GLORIA_HALLELUJAH));
 
         return letters;
     }
 
-    public static ArrayList<Character> instantiateWorldLetters(Context context, RelativeLayout relativeLayout) {
+    static ArrayList<Character> instantiateWorldLetters(Context context, RelativeLayout relativeLayout) {
 
         ArrayList<Character> letters = new ArrayList<>();
 
@@ -122,7 +122,7 @@ public class Instantiator {
         return letters;
     }
 
-    public static ArrayList<Character> instantiateMixedLetters(Context context, RelativeLayout relativeLayout) {
+    static ArrayList<Character> instantiateMixedLetters(Context context, RelativeLayout relativeLayout) {
 
         ArrayList<Character> letters = new ArrayList<>();
 
@@ -170,7 +170,7 @@ public class Instantiator {
     /**Encargado de llamar xSpeed la generacion de cada tipo de letra
      *
      */
-    public static ArrayList<Character> instantiateLetters(Context context, RelativeLayout relativeLayout) {
+    static ArrayList<Character> instantiateLetters(Context context, RelativeLayout relativeLayout) {
 
         ArrayList<Character> letters = new ArrayList<>();
 

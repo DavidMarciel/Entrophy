@@ -147,7 +147,7 @@ public class PasswordChange extends Activity {
                 updateTextViews(counter);
                 enableButtons();
             }
-            if (counter.full()) {                          //ya se ha elegido la clave
+            if (counter.isFull()) {                          //ya se ha elegido la clave
                 cleanElements();
                 disablebuttons();
                 stopLoop();

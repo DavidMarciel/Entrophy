@@ -41,7 +41,7 @@ public class Launcher extends AppCompatActivity {
 
 
     private void initAlphabetsSpinner(Context applicationContext) {
-        Spinner alphabetsType = (Spinner) findViewById(R.id.alphabetsSpinner);
+        Spinner alphabetsType = findViewById(R.id.alphabetsSpinner);
 
         initializeAlphabetsSpinnerScreenValue(applicationContext, alphabetsType);
 
@@ -72,7 +72,7 @@ public class Launcher extends AppCompatActivity {
     }
 
     private void initSeekBar() {
-        SeekBar sb = (SeekBar) findViewById(R.id.seekBar);
+        SeekBar sb = findViewById(R.id.seekBar);
 
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -99,7 +99,7 @@ public class Launcher extends AppCompatActivity {
     }
 
     private void updateSpeedLabel(int speed) {
-        TextView tv = (TextView) findViewById(R.id.etiquetaVelocidad);
+        TextView tv = findViewById(R.id.etiquetaVelocidad);
         tv.setText( String.valueOf(speed));
     }
 

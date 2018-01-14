@@ -15,6 +15,10 @@ public class LaserMove extends Move {
     private static final int STEPS = 20;
     private final float MAXIMUM_SPEED = STEPS /7+1;
 
+    public LaserMove() {
+        super();
+    }
+
     @Override
     public int getMovementType() {
         return LASER_MOVE;
@@ -47,15 +51,6 @@ public class LaserMove extends Move {
         if(x > X_MAX_SCREEN_SIZE) x = X_MAX_SCREEN_SIZE;
         if(y < Y_MIN_SCREEN_SIZE) y = Y_MIN_SCREEN_SIZE;
         if(y > Y_MAX_SCREEN_SIZE) y = Y_MAX_SCREEN_SIZE;
-    }
-
-    public LaserMove() {
-        super();
-    }
-
-    private void initSpeeds() {
-        xSpeed = (float) ((Math.random()* MAXIMUM_SPEED) - MAXIMUM_SPEED /2);
-        ySpeed = (float) ((Math.random()* MAXIMUM_SPEED) - MAXIMUM_SPEED /2);
     }
 
     @Override

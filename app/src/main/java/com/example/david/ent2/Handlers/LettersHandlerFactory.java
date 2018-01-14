@@ -15,20 +15,12 @@ import java.util.Collections;
  */
 public class LettersHandlerFactory {
 
-    private RelativeLayout relativeLayout;
-    private Context context;
-
     private AlphabetsFactory alphabetsFactory;
-    private Handler[] handlers;
-
 
 
     public LettersHandlerFactory(Context context, RelativeLayout relativeLayout) {
-        this.context = context;
-        this.relativeLayout = relativeLayout;
 
         alphabetsFactory = new AlphabetsFactory(context, relativeLayout);
-
     }
 
     public Handler[] getHandlers() {
@@ -48,10 +40,10 @@ public class LettersHandlerFactory {
 //        losManejadores.add(new InfiniteBlockHandler(letters));
 
 
-        this.handlers = new Handler[handlers.size()];
-        handlers.toArray(this.handlers);
+        Handler[] handlers1 = new Handler[handlers.size()];
+        handlers.toArray(handlers1);
 
-        return this.handlers;
+        return handlers1;
     }
 
 }
